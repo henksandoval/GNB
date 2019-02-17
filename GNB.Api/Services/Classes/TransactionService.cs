@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GNB.Api.Services
 {
-    public class TransactionService
+    public class TransactionService : ITransactionService
     {
         private static readonly HttpClient client = new HttpClient();
         private readonly IHerokuAppClient HerokuAppClient;

@@ -10,9 +10,9 @@ namespace GNB.Api.Controllers
     [ApiController]
     public class RateController : ControllerBase
     {
-        private readonly RateService RateService;
+        private readonly IRateService RateService;
 
-        public RateController(RateService rateService)
+        public RateController(IRateService rateService)
         {
             RateService = rateService;
         }
