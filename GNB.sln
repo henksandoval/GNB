@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNB.Web", "GNB.Web\GNB.Web.csproj", "{BBD8C674-36F2-4609-96DD-19755EF6A046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNB.Web", "GNB.Web\GNB.Web.csproj", "{BBD8C674-36F2-4609-96DD-19755EF6A046}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitGNB.Web", "NUnitGNB.Web\NUnitGNB.Web.csproj", "{D0D2827C-F108-4B09-909B-E05756625706}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNB.Web.Tests", "NUnitGNB.Web\GNB.Web.Tests.csproj", "{D0D2827C-F108-4B09-909B-E05756625706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GNB.Api", "GNB.Api\GNB.Api.csproj", "{65939BCE-654A-4431-B63A-A2F7BC4D787B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNB.Api", "GNB.Api\GNB.Api.csproj", "{65939BCE-654A-4431-B63A-A2F7BC4D787B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitGNB.Api", "NUnitGNB.Api\NUnitGNB.Api.csproj", "{3F6A0601-21FC-43F9-848C-4CF68E882687}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GNB.Api.Tests", "NUnitGNB.Api\GNB.Api.Tests.csproj", "{3F6A0601-21FC-43F9-848C-4CF68E882687}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
