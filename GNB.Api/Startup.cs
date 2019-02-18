@@ -1,5 +1,6 @@
 ﻿using GNB.Api.Clients;
 using GNB.Api.Services;
+using GNB.Api.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,11 @@ namespace GNB.Api
         public void ConfigureServices(IServiceCollection services)
         {
             IConfigurationSection uriHerokuApp = Configuration.GetSection("UriHerokuApp");
+
             services.AddSingleton<IRateService, RateService>();
             services.AddSingleton<ITransactionService, TransactionService>();
+            services.AddSingleton<IStreamUtility, StreamUtility>();
+
             services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
