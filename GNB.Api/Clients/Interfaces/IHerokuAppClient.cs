@@ -5,7 +5,7 @@ namespace GNB.Api.Clients
 {
     public interface IHerokuAppClient
     {
-        Task<Stream> GetStreamRates();
-        Task<Stream> GetStreamTransactions();
+        Task<string> GetStringRates();
+        Task<string> GetStringTransactions();
     }
 }

@@ -15,8 +15,8 @@ namespace GNB.Api.Clients
             HttpClient = httpClient;
         }
 
-        public Task<Stream> GetStreamRates() => HttpClient.GetStreamAsync(REQUEST_URI_RATES);
+        public Task<string> GetStringRates() => HttpClient.GetStringAsync(REQUEST_URI_RATES);
 
-        public Task<Stream> GetStreamTransactions() => HttpClient.GetStreamAsync(REQUEST_URI_TRANSACTIONS);
+        public Task<string> GetStringTransactions() => HttpClient.GetStringAsync(REQUEST_URI_TRANSACTIONS);
     }
 }

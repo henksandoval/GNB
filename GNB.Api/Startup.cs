@@ -22,8 +22,8 @@ namespace GNB.Api
         public void ConfigureServices(IServiceCollection services)
         {
             IConfigurationSection uriHerokuApp = Configuration.GetSection("UriHerokuApp");
-            services.AddSingleton<RateService>();
-            services.AddSingleton<TransactionService>();
+            services.AddSingleton<IRateService, RateService>();
+            services.AddSingleton<ITransactionService, TransactionService>();
             services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

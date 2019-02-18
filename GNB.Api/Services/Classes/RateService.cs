@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Services
@@ -20,9 +21,9 @@ namespace GNB.Api.Services
 
         public async Task<IEnumerable<RateModel>> GetRates()
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(IEnumerable<RateModel>));
-            Stream streamRates = await HerokuAppClient.GetStreamRates();
-            return serializer.ReadObject(streamRates) as IEnumerable<RateModel>;
+            DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(IEnumerable<RateModel>));
+            MemoryStream streamRates = new MemoryStream(Encoding.ASCII.GetBytes(await HerokuAppClient.GetStringRates()));
+            return deserializer.ReadObject(streamRates) as IEnumerable<RateModel>;
         }
     }
 }

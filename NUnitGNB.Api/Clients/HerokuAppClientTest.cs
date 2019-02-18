@@ -1,7 +1,6 @@
 ﻿using GNB.Api.Clients;
 using NUnit.Framework;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -24,14 +23,15 @@ namespace GNB.Api.Tests.Clients
         [Test]
         public async Task GetRates()
         {
-            Stream result = await HerokuAppClient.GetStreamRates();
+            string rates = await HerokuAppClient.GetStringRates();
+            Assert.IsNotNull(rates);
         }
 
         [Test]
-        public void Test()
+        public async Task GetTransactions()
         {
-            bool a = true;
-            Assert.IsTrue(a);
+            string transactions = await HerokuAppClient.GetStringTransactions();
+            Assert.IsNotNull(transactions);
         }
     }
 }
