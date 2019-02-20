@@ -8,7 +8,7 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class RateController : ControllerBase
+    public class RateController : ControllerBase
     {
         private readonly IRateService<RateModel> RateService;
 

@@ -8,7 +8,7 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class TransactionController : ControllerBase
+    public class TransactionController : ControllerBase
     {
         private readonly ITransactionService<TransactionModel> TransactionService;
 

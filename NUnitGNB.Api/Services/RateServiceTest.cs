@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,16 +27,17 @@ namespace GNB.Api.Tests.Services
             RateService = new RateService<RateModel>(MockHerokuAppCliente.Object, MockStreamUtility.Object);
         }
 
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""}]", TestName = "Parse One Json")]
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""},{""from"":""USD"",""to"":""AUD"",""rate"":""0.96""}]", TestName = "Parse Two Json")]
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""},{""from"":""USD"",""to"":""AUD"",""rate"":""0.96""},{""from"":""AUD"",""to"":""CAD"",""rate"":""1.11""}]", TestName = "Parse Multiple Json")]
-        public async Task GetRatesTest(string JSON)
+        [TestCase(@"[]", ExpectedResult = 0, TestName = "Parse Zero Json")]
+        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""}]", ExpectedResult = 1, TestName = "Parse One Json")]
+        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""},{""from"":""USD"",""to"":""AUD"",""rate"":""0.96""}]", ExpectedResult = 2, TestName = "Parse Two Json")]
+        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""rate"":""1.04""},{""from"":""USD"",""to"":""AUD"",""rate"":""0.96""},{""from"":""AUD"",""to"":""CAD"",""rate"":""1.11""}, {""from"":""USD"",""to"":""AUD"",""rate"":""0.96""}]", ExpectedResult = 4, TestName = "Parse Multiple Json")]
+        public async Task<int> GetRatesTest(string JSON)
         {
             MockHerokuAppCliente.Setup(setUp => setUp.GetStringRates()).ReturnsAsync(JSON);
             MockStreamUtility.Setup(setUp => setUp.ConvertStringToStream(JSON)).ReturnsAsync(new MemoryStream(Encoding.ASCII.GetBytes(JSON)));
             RateService<RateModel> service = new RateService<RateModel>(MockHerokuAppCliente.Object, MockStreamUtility.Object);
             IEnumerable<RateModel> result = await service.GetRates();
-            Assert.IsNotNull(result);
+            return result.Count();
         }
     }
 }
