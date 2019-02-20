@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GNB.Api.Tests.Clients
 {
     [TestFixture]
-    public class HerokuAppClientTest
+    class HerokuAppClientTest
     {
         private HerokuAppClient HerokuAppClient { get; set; }
 

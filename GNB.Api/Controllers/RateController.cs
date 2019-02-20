@@ -8,11 +8,11 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RateController : ControllerBase
+    class RateController : ControllerBase
     {
-        private readonly IRateService RateService;
+        private readonly IRateService<RateModel> RateService;
 
-        public RateController(IRateService rateService)
+        public RateController(IRateService<RateModel> rateService)
         {
             RateService = rateService;
         }

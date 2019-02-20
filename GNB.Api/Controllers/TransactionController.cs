@@ -8,15 +8,16 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionController : ControllerBase
+    class TransactionController : ControllerBase
     {
-        private readonly TransactionService TransactionService;
+        private readonly ITransactionService<TransactionModel> TransactionService;
 
-        public TransactionController(TransactionService transactionService)
+        public TransactionController(ITransactionService<TransactionModel> transactionService)
         {
             TransactionService = transactionService;
         }
 
+        [HttpGet]
         public async Task<IEnumerable<TransactionModel>> GetTransactions() => await TransactionService.GetTransactions();
     }
 }

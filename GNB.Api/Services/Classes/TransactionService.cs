@@ -1,29 +1,29 @@
 ﻿using GNB.Api.Clients;
-using GNB.Api.Models;
+using GNB.Api.Utilities;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Services
 {
-    public class TransactionService : ITransactionService
+    public class TransactionService<T> : ITransactionService<T> where T : class
     {
-        private static readonly HttpClient client = new HttpClient();
         private readonly IHerokuAppClient HerokuAppClient;
+        private readonly IStreamUtility StreamUtility;
 
-        public TransactionService(IHerokuAppClient herokuAppClient)
+        public TransactionService(IHerokuAppClient herokuAppClient, IStreamUtility streamUtility)
         {
             HerokuAppClient = herokuAppClient;
+            StreamUtility = streamUtility;
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetTransactions()
+        public async Task<IEnumerable<T>> GetTransactions()
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(IEnumerable<TransactionModel>));
-            MemoryStream streamTransactions = new MemoryStream(Encoding.ASCII.GetBytes(await HerokuAppClient.GetStringTransactions()));
-            return serializer.ReadObject(streamTransactions) as IEnumerable<TransactionModel>;
+            string Transactions = await GetTransactionsOfClient();
+            Stream stream = await StreamUtility.ConvertStringToStream(Transactions);
+            return await ConvertStreamUtility<T>.ConvertStreamToModel(stream);
         }
+
+        private async Task<string> GetTransactionsOfClient() => await HerokuAppClient.GetStringTransactions();
     }
 }

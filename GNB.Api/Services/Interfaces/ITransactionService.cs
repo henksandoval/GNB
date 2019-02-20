@@ -4,8 +4,8 @@ using GNB.Api.Models;
 
 namespace GNB.Api.Services
 {
-    public interface ITransactionService
+    public interface ITransactionService<T> where T : class
     {
-        Task<IEnumerable<TransactionModel>> GetTransactions();
+        Task<IEnumerable<T>> GetTransactions();
     }
 }

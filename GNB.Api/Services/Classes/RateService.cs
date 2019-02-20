@@ -1,14 +1,12 @@
 ﻿using GNB.Api.Clients;
-using GNB.Api.Models;
 using GNB.Api.Utilities;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Services
 {
-    public class RateService : IRateService
+    public class RateService<T> : IRateService<T> where T : class
     {
         private readonly IHerokuAppClient HerokuAppClient;
         private readonly IStreamUtility StreamUtility;
@@ -19,20 +17,13 @@ namespace GNB.Api.Services
             StreamUtility = streamUtility;
         }
 
-        public async Task<IEnumerable<RateModel>> GetRates()
+        public async Task<IEnumerable<T>> GetRates()
         {
-            string rates = await GetRatesOfClient();
-            Stream stream = await StreamUtility.ConvertStringToStream(rates);
-            IEnumerable<RateModel> response = await ConvertStreamToRateModel(stream);
-            return response;
+            string Rates = await GetRatesOfClient();
+            Stream stream = await StreamUtility.ConvertStringToStream(Rates);
+            return await ConvertStreamUtility<T>.ConvertStreamToModel(stream);
         }
 
-        private Task<IEnumerable<RateModel>> ConvertStreamToRateModel(Stream stream)
-        {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(IEnumerable<RateModel>));
-            return Task.FromResult(serializer.ReadObject(stream) as IEnumerable<RateModel>);
-        }
-
-        private Task<string> GetRatesOfClient() => HerokuAppClient.GetStringRates();
+        private async Task<string> GetRatesOfClient() => await HerokuAppClient.GetStringRates();
     }
 }

@@ -4,8 +4,8 @@ using GNB.Api.Models;
 
 namespace GNB.Api.Services
 {
-    public interface IRateService
+    public interface IRateService<T> where T : class
     {
-        Task<IEnumerable<RateModel>> GetRates();
+        Task<IEnumerable<T>> GetRates();
     }
 }
