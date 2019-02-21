@@ -28,9 +28,7 @@ namespace GNB.Api.Tests.Services
         }
 
         [TestCase(@"[]", ExpectedResult = 0, TestName = "Parse Zero Json", Category = "UniTest")]
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""}]", ExpectedResult = 1, TestName = "Parse One Json", Category = "UniTest")]
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""},{""from"":""USD"",""to"":""AUD"",""Transaction"":""0.96""}]", ExpectedResult = 2, TestName = "Parse Two Json", Category = "UniTest")]
-        [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""},{""from"":""USD"",""to"":""AUD"",""Transaction"":""0.96""},{""from"":""AUD"",""to"":""CAD"",""Transaction"":""1.11""}]", ExpectedResult = 3, TestName = "Parse Multiple Json", Category = "UniTest")]
+        [TestCase(@"[{""sku"":""W6040"",""amount"":""31.2"",""currency"":""USD""}]", ExpectedResult = 1, TestName = "Parse One Json", Category = "UniTest")]
         public async Task<int> GetTransactionsTest(string JSON)
         {
             herokuAppCliente.Setup(setUp => setUp.GetStringTransactions()).ReturnsAsync(JSON);
