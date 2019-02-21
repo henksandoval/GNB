@@ -9,28 +9,28 @@ namespace GNB.Api.Tests.Clients
     [TestFixture]
     class HerokuAppClientTest
     {
-        private HerokuAppClient HerokuAppClient { get; set; }
+        private HerokuAppClient herokuAppClient;
 
         [SetUp]
         public void SetUp()
         {
-            HerokuAppClient = new HerokuAppClient(new HttpClient
+            herokuAppClient = new HerokuAppClient(new HttpClient
             {
                 BaseAddress = new Uri("http://quiet-stone-2094.herokuapp.com")
             });
         }
 
-        [Test]
+        [TestCase(Category = "UnitTest")]
         public async Task GetStringRatesIsNotNull()
         {
-            string rates = await HerokuAppClient.GetStringRates();
+            string rates = await herokuAppClient.GetStringRates();
             Assert.IsNotNull(rates);
         }
 
-        [Test]
+        [TestCase(Category = "UnitTest")]
         public async Task GetStringTransactionsIsNotNull()
         {
-            string transactions = await HerokuAppClient.GetStringTransactions();
+            string transactions = await herokuAppClient.GetStringTransactions();
             Assert.IsNotNull(transactions);
         }
     }

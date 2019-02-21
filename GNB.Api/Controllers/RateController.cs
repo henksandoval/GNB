@@ -18,8 +18,7 @@ namespace GNB.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<RateModel>> GetRates() => 
+        public async Task<IEnumerable<RateModel>> GetAllRates() => 
             await RateService.GetRates();
-
     }
 }
