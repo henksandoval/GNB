@@ -8,22 +8,24 @@ namespace GNB.Api.Services
 {
     public class TransactionService<T> : ITransactionService<T> where T : class
     {
-        private readonly IHerokuAppClient HerokuAppClient;
-        private readonly IStreamUtility StreamUtility;
+        private readonly IHerokuAppClient herokuAppClient;
+        private readonly IStreamUtility<T> streamUtility;
 
-        public TransactionService(IHerokuAppClient herokuAppClient, IStreamUtility streamUtility)
+        public IStreamUtility<T> Stream { get; private set; }
+
+        public TransactionService(IHerokuAppClient herokuAppClient, IStreamUtility<T> streamUtility)
         {
-            HerokuAppClient = herokuAppClient;
-            StreamUtility = streamUtility;
+            this.herokuAppClient = herokuAppClient;
+            this.streamUtility = streamUtility;
         }
 
         public async Task<IEnumerable<T>> GetTransactions()
         {
             string Transactions = await GetTransactionsOfClient();
-            Stream stream = await StreamUtility.ConvertStringToStream(Transactions);
-            return await ConvertStreamUtility<T>.ConvertStreamToModel(stream);
+            Stream stream = await streamUtility.ConvertStringToStream(Transactions);
+            return await StreamUtility<T>.ConvertStreamToModel(stream);
         }
 
-        private async Task<string> GetTransactionsOfClient() => await HerokuAppClient.GetStringTransactions();
+        private async Task<string> GetTransactionsOfClient() => await herokuAppClient.GetStringTransactions();
     }
 }

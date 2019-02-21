@@ -22,4 +22,8 @@
     <ProjectReference Include="..\GNB.Api\GNB.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
 </Project>

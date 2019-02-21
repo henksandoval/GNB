@@ -17,13 +17,13 @@ namespace GNB.Api.Tests.Services
     {
         private RateService<RateModel> RateService { get; set; }
         private Mock<IHerokuAppClient> MockHerokuAppCliente { get; set; }
-        private Mock<IStreamUtility> MockStreamUtility { get; set; }
+        private Mock<IStreamUtility<RateModel>> MockStreamUtility { get; set; }
 
         [SetUp]
         public void SetUp()
         {
             MockHerokuAppCliente = new Mock<IHerokuAppClient>();
-            MockStreamUtility = new Mock<IStreamUtility>();
+            MockStreamUtility = new Mock<IStreamUtility<RateModel>>();
             RateService = new RateService<RateModel>(MockHerokuAppCliente.Object, MockStreamUtility.Object);
         }
 

@@ -18,6 +18,7 @@ namespace GNB.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TransactionModel>> GetTransactions() => await TransactionService.GetTransactions();
+        public async Task<IEnumerable<TransactionModel>> GetTransactions() => 
+            await TransactionService.GetTransactions();
     }
 }

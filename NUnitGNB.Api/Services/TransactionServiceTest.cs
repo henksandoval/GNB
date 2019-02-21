@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,13 +17,13 @@ namespace GNB.Api.Tests.Services
     {
         private TransactionService<TransactionModel> TransactionService { get; set; }
         private Mock<IHerokuAppClient> MockHerokuAppCliente { get; set; }
-        private Mock<IStreamUtility> MockStreamUtility { get; set; }
+        private Mock<IStreamUtility<TransactionModel>> MockStreamUtility { get; set; }
 
         [SetUp]
         public void SetUp()
         {
             MockHerokuAppCliente = new Mock<IHerokuAppClient>();
-            MockStreamUtility = new Mock<IStreamUtility>();
+            MockStreamUtility = new Mock<IStreamUtility<TransactionModel>>();
             TransactionService = new TransactionService<TransactionModel>(MockHerokuAppCliente.Object, MockStreamUtility.Object);
         }
 
@@ -30,13 +31,13 @@ namespace GNB.Api.Tests.Services
         [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""}]", ExpectedResult = 1, TestName = "Parse One Json")]
         [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""},{""from"":""USD"",""to"":""AUD"",""Transaction"":""0.96""}]", ExpectedResult = 2, TestName = "Parse Two Json")]
         [TestCase(@"[{""from"":""AUD"",""to"":""USD"",""Transaction"":""1.04""},{""from"":""USD"",""to"":""AUD"",""Transaction"":""0.96""},{""from"":""AUD"",""to"":""CAD"",""Transaction"":""1.11""}]", ExpectedResult = 3, TestName = "Parse Multiple Json")]
-        public async Task GetTransactionsTest(string JSON)
+        public async Task<int> GetTransactionsTest(string JSON)
         {
             MockHerokuAppCliente.Setup(setUp => setUp.GetStringTransactions()).ReturnsAsync(JSON);
             MockStreamUtility.Setup(setUp => setUp.ConvertStringToStream(JSON)).ReturnsAsync(new MemoryStream(Encoding.ASCII.GetBytes(JSON)));
             TransactionService<TransactionModel> service = new TransactionService<TransactionModel>(MockHerokuAppCliente.Object, MockStreamUtility.Object);
             IEnumerable<TransactionModel> result = await service.GetTransactions();
-            Assert.IsNotNull(result);
+            return result.Count();
         }
     }
 }

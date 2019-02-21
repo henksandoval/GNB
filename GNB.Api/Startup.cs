@@ -27,7 +27,7 @@ namespace GNB.Api
 
             services.AddSingleton<IRateService<RateModel>, RateService<RateModel>>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
-            services.AddSingleton<IStreamUtility, StreamUtility>();
+            services.AddSingleton(typeof(IStreamUtility<>), typeof(StreamUtility<>));
 
             services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
