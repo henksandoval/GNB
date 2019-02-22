@@ -1,30 +1,25 @@
 ﻿using GNB.Api.Clients;
 using GNB.Api.Models;
 using GNB.Api.Services;
-using GNB.Api.Utilities;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Tests.Services
 {
     [TestFixture]
-    class RateServiceTest
+    internal class RateServiceTest
     {
         private Mock<IHerokuAppClient> herokuAppCliente;
-        private Mock<IStreamUtility<RateModel>> streamUtility;
         private RateService<RateModel> rateService;
 
         [SetUp]
         public void SetUp()
         {
             herokuAppCliente = new Mock<IHerokuAppClient>();
-            streamUtility = new Mock<IStreamUtility<RateModel>>();
-            rateService = new RateService<RateModel>(herokuAppCliente.Object, streamUtility.Object);
+            rateService = new RateService<RateModel>(herokuAppCliente.Object);
         }
 
         [TestCase(@"[]", ExpectedResult = 0, TestName = "Parse Zero Json", Category = "UnitTest")]
@@ -34,8 +29,7 @@ namespace GNB.Api.Tests.Services
         public async Task<int> GetRatesTest(string JSON)
         {
             herokuAppCliente.Setup(setUp => setUp.GetStringRates()).ReturnsAsync(JSON);
-            streamUtility.Setup(setUp => setUp.ConvertStringToStream(JSON)).ReturnsAsync(new MemoryStream(Encoding.ASCII.GetBytes(JSON)));
-            RateService<RateModel> service = new RateService<RateModel>(herokuAppCliente.Object, streamUtility.Object);
+            RateService<RateModel> service = new RateService<RateModel>(herokuAppCliente.Object);
             IEnumerable<RateModel> result = await service.TryGetRates();
             return result.Count();
         }

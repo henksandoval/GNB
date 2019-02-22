@@ -1,9 +1,7 @@
 ﻿using GNB.Api.Clients;
-using GNB.Api.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +10,10 @@ namespace GNB.Api.Services
     public class TransactionService<T> : ITransactionService<T> where T : class
     {
         private readonly IHerokuAppClient herokuAppClient;
-        private readonly IStreamUtility<T> streamUtility;
 
-        public TransactionService(IHerokuAppClient herokuAppClient, IStreamUtility<T> streamUtility)
+        public TransactionService(IHerokuAppClient herokuAppClient)
         {
             this.herokuAppClient = herokuAppClient;
-            this.streamUtility = streamUtility;
         }
 
         public async Task<IEnumerable<T>> TryGetTransactions()
@@ -26,7 +22,7 @@ namespace GNB.Api.Services
             {
                 return await GetTransactions();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -44,7 +40,7 @@ namespace GNB.Api.Services
             {
                 return JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringTransactions());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
