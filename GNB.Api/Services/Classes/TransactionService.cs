@@ -1,5 +1,6 @@
 ﻿using GNB.Api.Clients;
 using GNB.Api.Utilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,16 +42,12 @@ namespace GNB.Api.Services
         {
             try
             {
-                string transactions = await GetTransactionsOfClient();
-                Stream stream = await streamUtility.ConvertStringToStream(transactions);
-                return await StreamUtility<T>.ConvertStreamToModel(stream);
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringTransactions());
             }
             catch (Exception e)
             {
                 throw;
             }
         }
-
-        private async Task<string> GetTransactionsOfClient() => await herokuAppClient.GetStringTransactions();
     }
 }

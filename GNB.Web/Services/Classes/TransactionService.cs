@@ -1,5 +1,6 @@
 ﻿using GNB.Web.Clients;
 using GNB.Web.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,13 +18,8 @@ namespace GNB.Web.Services
 
         public async Task<IEnumerable<TransactionModel>> GetAllTransactions(Func<TransactionModel, bool> predicate = null)
         {
-            var tempData = new List<TransactionModel>
-            {
-                new TransactionModel { }
-            };
-
-            await apiClient.GetStringTransactions();
-            return tempData;
+            string data = await apiClient.GetStringTransactions();
+            return JsonConvert.DeserializeObject<IEnumerable<TransactionModel>>(data);
         }
     }
 }

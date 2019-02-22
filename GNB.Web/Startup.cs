@@ -1,6 +1,6 @@
 ﻿using GNB.Web.Clients;
-using GNB.Web.Clients.Classes;
 using GNB.Web.Repositories;
+using GNB.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,10 +23,11 @@ namespace GNB.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationSection uriApiClient = Configuration.GetSection("UriApiClient");
 
-            services.AddSingleton<ITransactionRepository, TransactionRepository>();
+            IConfigurationSection uriApiClient = Configuration.GetSection("UriApiClient");
             services.AddHttpClient<IApiClient, ApiClient>(c => c.BaseAddress = new Uri(uriApiClient.Value));
+            services.AddSingleton<ITransactionService, TransactionService>();
+            services.AddSingleton<ITransactionRepository, TransactionRepository>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {

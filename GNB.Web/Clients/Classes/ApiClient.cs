@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GNB.Web.Clients.Classes
+namespace GNB.Web.Clients
 {
     public class ApiClient : IApiClient
     {
@@ -14,11 +14,12 @@ namespace GNB.Web.Clients.Classes
             HttpClient = httpClient;
         }
 
-        public Task<string> GetStringTransactions()
+        public async Task<string> GetStringTransactions()
         {
             try
             {
-                return HttpClient.GetStringAsync("transaction");
+                var data = await HttpClient.GetStringAsync("transaction");
+                return data;
             }
             catch (Exception e)
             {

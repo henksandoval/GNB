@@ -21,8 +21,4 @@
     <ProjectReference Include="..\GNB.Web\GNB.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Clients\" />
-  </ItemGroup>
-
 </Project>
