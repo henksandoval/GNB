@@ -5952,3 +5952,13 @@ img[data-dz-thumbnail]{
     background-color: #F0F2F4;
     color: black;
 }
+
+.img-menu-icon {
+    width: 65px;
+    height: auto;
+}
+
+.img-menu-title {
+    width: 150px;
+    height: auto;
+}
