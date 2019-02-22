@@ -56,6 +56,4 @@ namespace GNB.Api.Business
 
         private decimal GetMount2(RateModel rate, TransactionModel transaction) => (transaction.Amount / rate.Rate);
     }
-
-
 }

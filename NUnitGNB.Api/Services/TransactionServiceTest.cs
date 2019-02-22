@@ -4,8 +4,6 @@ using GNB.Api.Services;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Tests.Services
