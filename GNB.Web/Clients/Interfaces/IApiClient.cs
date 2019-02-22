@@ -1,6 +1,9 @@
-﻿namespace GNB.Web.Clients
+﻿using System.Threading.Tasks;
+
+namespace GNB.Web.Clients
 {
     public interface IApiClient
     {
+        Task<string> GetStringTransactions();
     }
 }

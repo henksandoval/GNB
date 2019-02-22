@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GNB.Web.Clients;
+﻿using GNB.Web.Clients;
 using GNB.Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GNB.Web.Services
 {
@@ -16,6 +15,15 @@ namespace GNB.Web.Services
             this.apiClient = apiClient;
         }
 
-        Task<IEnumerable<TransactionModel>> ITransactionService.GetAllTransactions() => throw new NotImplementedException();
+        public async Task<IEnumerable<TransactionModel>> GetAllTransactions(Func<TransactionModel, bool> predicate = null)
+        {
+            var tempData = new List<TransactionModel>
+            {
+                new TransactionModel { }
+            };
+
+            await apiClient.GetStringTransactions();
+            return tempData;
+        }
     }
 }

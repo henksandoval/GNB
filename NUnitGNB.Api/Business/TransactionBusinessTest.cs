@@ -17,6 +17,25 @@ namespace GNB.Api.Tests.Business
         private Mock<IRateService<RateModel>> rateService;
         private TransactionBusiness transactionBusiness;
 
+
+        [SetUp]
+        public void SetUp()
+        {
+            transactionService = new Mock<ITransactionService<TransactionModel>>();
+            rateService = new Mock<IRateService<RateModel>>();
+            transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
+        }
+
+        [TestCaseSource(typeof(TransactionBusinessTest), "SomeTestsCases")]
+        public async Task GetProcessedTransactions(IEnumerable<TransactionModel> transactions, IEnumerable<RateModel> rates, decimal totalPrice)
+        {
+            transactionService.Setup(opt => opt.TryGetTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(transactions);
+            rateService.Setup(opt => opt.TryGetRates()).ReturnsAsync(rates);
+            await transactionBusiness.GetTransactionsBySkuCode(new TransactionModel { Sku = string.Empty });
+
+            Assert.That(await transactionBusiness.GetTotalPriceTransactions, Is.EqualTo(totalPrice), "Total Price is not equal");
+        }
+
         private static IEnumerable<TestCaseData> SomeTestsCases {
             get {
                 yield return new TestCaseData
@@ -90,24 +109,6 @@ namespace GNB.Api.Tests.Business
                     25.99m
                 ).SetName("FilterDataAndComplexConversion");
             }
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            transactionService = new Mock<ITransactionService<TransactionModel>>();
-            rateService = new Mock<IRateService<RateModel>>();
-            transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
-        }
-
-        [TestCaseSource(typeof(TransactionBusinessTest), "SomeTestsCases")]
-        public async Task GetProcessedTransactions(IEnumerable<TransactionModel> transactions, IEnumerable<RateModel> rates, decimal totalPrice)
-        {
-            transactionService.Setup(opt => opt.TryGetTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(transactions);
-            rateService.Setup(opt => opt.TryGetRates()).ReturnsAsync(rates);
-            await transactionBusiness.GetTransactionsBySkuCode(new TransactionModel { Sku = string.Empty });
-
-            Assert.That(await transactionBusiness.GetTotalPriceTransactions, Is.EqualTo(totalPrice), "Total Price is not equal");
         }
     }
 }

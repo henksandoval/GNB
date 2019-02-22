@@ -1,6 +1,6 @@
 ﻿using GNB.Web.Clients;
 using GNB.Web.Clients.Classes;
-using GNB.Web.Repository;
+using GNB.Web.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

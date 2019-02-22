@@ -1,4 +1,5 @@
 ﻿using GNB.Web.Models;
+using GNB.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,8 +8,16 @@ namespace GNB.Web.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        public Task<IEnumerable<TransactionModel>> GetAllTransactions() => throw new NotImplementedException();
+        private readonly ITransactionService transactionService;
 
-        public Task<IEnumerable<TransactionModel>> GetAllTransactions(Func<TransactionModel> predicate) => throw new NotImplementedException();
+        public TransactionRepository(ITransactionService transactionService)
+        {
+            this.transactionService = transactionService;
+        }
+
+        public async Task<IEnumerable<TransactionModel>> TryGetAllTransactions(Func<TransactionModel, bool> predicate = null)
+        {
+            return await transactionService.GetAllTransactions(predicate);
+        }
     }
 }

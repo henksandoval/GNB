@@ -44,20 +44,6 @@ namespace GNB.Api.Tests.Clients
             });
 
             Exception exception = Assert.ThrowsAsync<Exception>(async () => await request.GetStringTransactions());
-            //Assert.That(exception..StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-        }
-
-        //[Test]
-        //public void Tests()
-        //{
-        //    // Using a method as a delegate
-        //    var data = Assert.ThrowsAsync<ArgumentException>(async () => await MethodThatThrows());
-        //}
-
-        async Task MethodThatThrows()
-        {
-            await Task.Delay(100);
-            throw new ArgumentException();
         }
     }
 }

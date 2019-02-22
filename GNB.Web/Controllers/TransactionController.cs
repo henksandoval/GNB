@@ -18,8 +18,7 @@ namespace GNB.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IEnumerable<TransactionModel> transactions = await transactionRepository.GetAllTransactions();
-
+            IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions();
             return View("Index", transactions);
         }
     }

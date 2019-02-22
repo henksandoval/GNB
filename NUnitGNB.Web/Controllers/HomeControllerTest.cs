@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
-namespace GNB.Web.Tests
+namespace GNB.Web.Tests.Controllers
 {
     [TestFixture]
     internal class HomeControllerTest
