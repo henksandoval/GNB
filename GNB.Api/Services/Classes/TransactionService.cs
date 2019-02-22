@@ -1,7 +1,9 @@
 ﻿using GNB.Api.Clients;
 using GNB.Api.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Services
@@ -19,10 +21,18 @@ namespace GNB.Api.Services
             this.streamUtility = streamUtility;
         }
 
-        public async Task<IEnumerable<T>> GetTransactions()
+        public async Task<IEnumerable<T>> TryGetTransactions() => await GetTransactions();
+
+        public async Task<IEnumerable<T>> TryGetTransactions(Func<T, bool> predicate)
         {
-            string Transactions = await GetTransactionsOfClient();
-            Stream stream = await streamUtility.ConvertStringToStream(Transactions);
+            IEnumerable<T> data = await GetTransactions();
+            return data.Where(predicate);
+        }
+
+        private async Task<IEnumerable<T>> GetTransactions()
+        {
+            string transactions = await GetTransactionsOfClient();
+            Stream stream = await streamUtility.ConvertStringToStream(transactions);
             return await StreamUtility<T>.ConvertStreamToModel(stream);
         }
 

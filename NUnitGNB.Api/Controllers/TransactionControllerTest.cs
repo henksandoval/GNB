@@ -36,7 +36,7 @@ namespace GNB.Api.Tests.Controllers
         public async Task GetAllTransactions(IEnumerable<TransactionModel> Transactions)
         {
             Mock<ITransactionService<TransactionModel>> mock = new Mock<ITransactionService<TransactionModel>>();
-            mock.Setup(opt => opt.GetTransactions()).ReturnsAsync(Transactions);
+            mock.Setup(opt => opt.TryGetTransactions()).ReturnsAsync(Transactions);
             TransactionController controller = new TransactionController(mock.Object);
             IEnumerable<TransactionModel> response = await controller.GetAllTransactions();
             Assert.That(response.Count(), Is.EqualTo(Transactions.Count()));

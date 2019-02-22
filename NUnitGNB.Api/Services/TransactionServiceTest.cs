@@ -28,22 +28,41 @@ namespace GNB.Api.Tests.Services
 
         private static IEnumerable<TestCaseData> SomeTestCases {
             get {
-                yield return new TestCaseData(@"[{""sku"":""W6040"",""amount"":""31.2"",""currency"":""USD""}]", new List<TransactionModel> { new TransactionModel { Sku = "W6040", Amount = 31.2m, Currency = "USD" } }).SetName("ParseOneJson");
-                yield return new TestCaseData(@"[{""sku"":""R2008"",""amount"":""17.95"",""currency"":""USD""}, {""sku"":""M2007"",""amount"":""34.57"",""currency"":""CAD""}]", new List<TransactionModel>
-                {
-                    new TransactionModel { Sku = "R2008", Amount = 17.95M, Currency = "USD" },
-                    new TransactionModel { Sku = "M2007", Amount = 34.57m, Currency = "CAD" },
-                }).SetName("ParseTwoJson");
+                yield return new TestCaseData
+                    (
+                        @"[]",
+                        new List<TransactionModel>()
+                    )
+                    .SetName("ParseZeroJson");
+                yield return new TestCaseData
+                    (
+                        @"[{""sku"":""W6040"",""amount"":""31.2"",""currency"":""USD""}]",
+                        new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "W6040", Amount = 31.2m, Currency = "USD" }
+                        }
+                    )
+                    .SetName("ParseOneJson");
+                yield return new TestCaseData
+                    (
+                        @"[{""sku"":""R2008"",""amount"":""17.95"",""currency"":""USD""}, {""sku"":""M2007"",""amount"":""34.57"",""currency"":""CAD""}]",
+                        new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "R2008", Amount = 17.95M, Currency = "USD" },
+                            new TransactionModel { Sku = "M2007", Amount = 34.57m, Currency = "CAD" },
+                        }
+                    )
+                    .SetName("ParseTwoJson");
             }
         }
 
         [TestCaseSource(typeof(TransactionServiceTest), "SomeTestCases")]
-        public async Task SomeMethod_Always_DoesSomethingWithParameters(string jsonString, IEnumerable<TransactionModel> expectedResult)
+        public async Task GetTransactionsTest(string jsonString, IEnumerable<TransactionModel> expectedResult)
         {
             herokuAppCliente.Setup(setUp => setUp.GetStringTransactions()).ReturnsAsync(jsonString);
             streamUtility.Setup(setUp => setUp.ConvertStringToStream(jsonString)).ReturnsAsync(new MemoryStream(Encoding.ASCII.GetBytes(jsonString)));
             TransactionService<TransactionModel> service = new TransactionService<TransactionModel>(herokuAppCliente.Object, streamUtility.Object);
-            IEnumerable<TransactionModel> result = await service.GetTransactions();
+            IEnumerable<TransactionModel> result = await service.TryGetTransactions();
 
             Assert.That(result, Is.EqualTo(expectedResult));
         }

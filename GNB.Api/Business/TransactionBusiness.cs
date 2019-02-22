@@ -1,9 +1,8 @@
-﻿using System;
+﻿using GNB.Api.Models;
+using GNB.Api.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GNB.Api.Models;
-using GNB.Api.Services;
 
 namespace GNB.Api.Business
 {
@@ -18,9 +17,32 @@ namespace GNB.Api.Business
             this.rateService = rateService;
         }
 
-        public IEnumerable<TransactionModel> GetTransactionsBySkuCode(TransactionModel transactionModel) => new List<TransactionModel> {
-                new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
-                new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-            };
+        public async Task<IEnumerable<TransactionModel>> GetTransactionsBySkuCode(TransactionModel transactionModel)
+        {
+
+            Task<IEnumerable<TransactionModel>> getTransactions = transactionService.TryGetTransactions(x => x.Sku == transactionModel.Sku);
+            Task<IEnumerable<RateModel>> getRates = rateService.GetRates();
+
+            await Task.WhenAll(getTransactions, getRates);
+
+            IEnumerable<TransactionModel> transactions = await getTransactions;
+            IEnumerable<RateModel> rates = await getRates;
+
+            transactions.Where(x => x.Currency != "EUR").ToList().ForEach(transaction => {
+                ConvertCurrencyInTransaction(ref transaction, rates);
+            });
+
+            return transactions.Where(x => x.Sku == transactionModel.Sku);
+        }
+
+        private void ConvertCurrencyInTransaction(ref TransactionModel transaction, IEnumerable<RateModel> rates)
+        {
+            transaction.Amount = GetMount(rates.SingleOrDefault(x => x.From == "EUR"), transaction);
+        }
+
+        private decimal GetMount(RateModel rate, TransactionModel transaction)
+        {
+            return rate.Rate * transaction.Amount;
+        }
     }
 }

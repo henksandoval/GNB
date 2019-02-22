@@ -19,6 +19,6 @@ namespace GNB.Api.Controllers
 
         [HttpGet]
         public async Task<IEnumerable<TransactionModel>> GetAllTransactions() => 
-            await TransactionService.GetTransactions();
+            await TransactionService.TryGetTransactions();
     }
 }
