@@ -17,7 +17,11 @@ namespace GNB.Api.Business
             this.rateService = rateService;
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetTransactionsBySkuCode(TransactionModel transactionModel)
+        public IEnumerable<TransactionModel> Transactions { get; private set; }
+        public Task<decimal> GetTotalPriceTransactions => 
+            Task.FromResult(decimal.Round(Transactions.Sum(x => x.Amount), 2));
+
+        public async Task GetTransactionsBySkuCode(TransactionModel transactionModel)
         {
 
             Task<IEnumerable<TransactionModel>> getTransactions = transactionService.TryGetTransactions(x => x.Sku == transactionModel.Sku);
@@ -25,24 +29,33 @@ namespace GNB.Api.Business
 
             await Task.WhenAll(getTransactions, getRates);
 
-            IEnumerable<TransactionModel> transactions = await getTransactions;
+            Transactions = await getTransactions;
             IEnumerable<RateModel> rates = await getRates;
 
-            transactions.Where(x => x.Currency != "EUR").ToList().ForEach(transaction => {
+            Transactions.Where(x => x.Currency != "EUR").ToList().ForEach(transaction =>
+            {
                 ConvertCurrencyInTransaction(ref transaction, rates);
             });
-
-            return transactions.Where(x => x.Sku == transactionModel.Sku);
         }
 
         private void ConvertCurrencyInTransaction(ref TransactionModel transaction, IEnumerable<RateModel> rates)
         {
-            transaction.Amount = GetMount(rates.SingleOrDefault(x => x.From == "EUR"), transaction);
+            TransactionModel condition = transaction;
+
+            if (rates.Any(x => x.From == condition.Currency && x.To == "EUR"))
+            {
+                transaction.Amount = GetMount(rates.SingleOrDefault(x => x.From == condition.Currency && x.To == "EUR"), transaction);
+            }
+            else
+            {
+                transaction.Amount = GetMount2(rates.SingleOrDefault(x => x.To == condition.Currency && x.From == "EUR"), transaction);
+            }
         }
 
-        private decimal GetMount(RateModel rate, TransactionModel transaction)
-        {
-            return rate.Rate * transaction.Amount;
-        }
+        private decimal GetMount(RateModel rate, TransactionModel transaction) => (rate.Rate * transaction.Amount);
+
+        private decimal GetMount2(RateModel rate, TransactionModel transaction) => (transaction.Amount / rate.Rate);
     }
+
+
 }

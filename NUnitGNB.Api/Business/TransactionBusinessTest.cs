@@ -17,22 +17,10 @@ namespace GNB.Api.Tests.Business
         private Mock<IRateService<RateModel>> rateService;
         private TransactionBusiness transactionBusiness;
 
-        private static IEnumerable<TestCaseData> SomeTestCases {
+        private static IEnumerable<TestCaseData> SomeTestsCases {
             get {
                 yield return new TestCaseData
                 (
-                    new List<TransactionModel>
-                        {
-                            new TransactionModel { Sku = "T2006", Amount = 10.00m, Currency = "USD" },
-                            new TransactionModel { Sku = "M2007", Amount = 34.57m, Currency = "CAD" },
-                            new TransactionModel { Sku = "R2008", Amount = 17.95m, Currency = "USD" },
-                            new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-                            new TransactionModel { Sku = "B2009", Amount = 21.23m, Currency = "USD" },
-                        },
-                    new TransactionModel
-                    {
-                        Sku = "T2006"
-                    },
                     new List<TransactionModel>
                         {
                             new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
@@ -43,28 +31,64 @@ namespace GNB.Api.Tests.Business
                             new RateModel { From = "EUR", To = "USD", Rate = 1.359m }
                         },
                     14.99m
-                ).SetName("FilterT2006");
-                //yield return new TestCaseData
-                //(
-                //    new List<TransactionModel>
-                //        {
-                //            new TransactionModel { Sku = "T2007", Amount = 10.00m, Currency = "USD" },
-                //            new TransactionModel { Sku = "M2007", Amount = 34.57m, Currency = "CAD" },
-                //            new TransactionModel { Sku = "R2008", Amount = 17.95m, Currency = "USD" },
-                //            new TransactionModel { Sku = "T2007", Amount = 7.89m, Currency = "EUR" },
-                //            new TransactionModel { Sku = "B2009", Amount = 21.23m, Currency = "USD" },
-                //        }, 
-                //    new TransactionModel
-                //        {
-                //            Sku = "T2007"
-                //        }, 
-                //    new List<TransactionModel>
-                //        {
-                //            new TransactionModel { Sku = "T2007", Amount = 7.36m, Currency = "EUR" },
-                //            new TransactionModel { Sku = "T2007", Amount = 7.89m, Currency = "EUR" },
-                //        },
-                //    15.25m
-                //).SetName("FilterT2007");
+                ).SetName("WithOutConversion");
+                yield return new TestCaseData
+                (
+                    new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "T2006", Amount = 10.0m, Currency = "USD" },
+                            new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
+                        },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "USD", To = "EUR", Rate = 0.736m }
+                        },
+                    14.99m
+                ).SetName("SimpleConversion");
+                yield return new TestCaseData
+                (
+                    new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "T2006", Amount = 10.0m, Currency = "USD" },
+                            new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
+                        },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "EUR", To = "USD", Rate = 1.359m}
+                        },
+                    14.99m
+                ).SetName("InvertedConversion");
+                yield return new TestCaseData
+                (
+                    new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "T2006", Amount = 10.0m, Currency = "USD" },
+                            new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
+                        },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "EUR", To = "USD", Rate = 1.359m},
+                            new RateModel { From = "USD", To = "EUR", Rate = 0.736m }
+                        },
+                    14.99m
+                ).SetName("InvertedConversionMultipleRates");
+                yield return new TestCaseData
+                (
+                    new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "T2007", Amount = 12.32m, Currency = "CAD" },
+                            new TransactionModel { Sku = "T2007", Amount = 14.6m, Currency = "USD" },
+                            new TransactionModel { Sku = "T2007", Amount = 6.23m, Currency = "EUR" },
+                        },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "EUR", To = "USD", Rate = 1.359m },
+                            new RateModel { From = "CAD", To = "EUR", Rate = 0.732m },
+                            new RateModel { From = "USD", To = "EUR", Rate = 0.736m },
+                            new RateModel { From = "EUR", To = "CAD", Rate = 1.366m },
+                        },
+                    25.99m
+                ).SetName("FilterDataAndComplexConversion");
             }
         }
 
@@ -76,16 +100,14 @@ namespace GNB.Api.Tests.Business
             transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
         }
 
-        [TestCaseSource(typeof(TransactionBusinessTest), "SomeTestCases")]
-        public async Task GetTransactionsBySkuCodeFilters(IEnumerable<TransactionModel> transactionsList, TransactionModel filteringCondition, IEnumerable<TransactionModel> filteredList, IEnumerable<RateModel> rates, decimal totalPrice)
+        [TestCaseSource(typeof(TransactionBusinessTest), "SomeTestsCases")]
+        public async Task GetProcessedTransactions(IEnumerable<TransactionModel> transactions, IEnumerable<RateModel> rates, decimal totalPrice)
         {
-            transactionService.Setup(opt => opt.TryGetTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(filteredList);
+            transactionService.Setup(opt => opt.TryGetTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(transactions);
             rateService.Setup(opt => opt.GetRates()).ReturnsAsync(rates);
-            IEnumerable<TransactionModel> result = await transactionBusiness.GetTransactionsBySkuCode(filteringCondition);
+            await transactionBusiness.GetTransactionsBySkuCode(new TransactionModel { Sku = string.Empty });
 
-            Assert.That(filteredList.All(x => x.Sku == filteringCondition.Sku), Is.EqualTo(result.All(x => x.Sku == filteringCondition.Sku)), "List filtered is not equal to list filtered expected");
-            Assert.That(result.Sum(x => x.Amount), Is.EqualTo(totalPrice), "Total Price is not equal");
-            Assert.That(filteredList, Is.EqualTo(result), "All data in filteredList is not equal to resultList");
+            Assert.That(await transactionBusiness.GetTotalPriceTransactions, Is.EqualTo(totalPrice), "Total Price is not equal");
         }
     }
 }
