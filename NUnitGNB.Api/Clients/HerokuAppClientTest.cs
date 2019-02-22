@@ -47,12 +47,12 @@ namespace GNB.Api.Tests.Clients
             //Assert.That(exception..StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
-        [Test]
-        public void Tests()
-        {
-            // Using a method as a delegate
-            var data = Assert.ThrowsAsync<ArgumentException>(async () => await MethodThatThrows());
-        }
+        //[Test]
+        //public void Tests()
+        //{
+        //    // Using a method as a delegate
+        //    var data = Assert.ThrowsAsync<ArgumentException>(async () => await MethodThatThrows());
+        //}
 
         async Task MethodThatThrows()
         {
