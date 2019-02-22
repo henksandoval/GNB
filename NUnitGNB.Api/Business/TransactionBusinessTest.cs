@@ -104,7 +104,7 @@ namespace GNB.Api.Tests.Business
         public async Task GetProcessedTransactions(IEnumerable<TransactionModel> transactions, IEnumerable<RateModel> rates, decimal totalPrice)
         {
             transactionService.Setup(opt => opt.TryGetTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(transactions);
-            rateService.Setup(opt => opt.GetRates()).ReturnsAsync(rates);
+            rateService.Setup(opt => opt.TryGetRates()).ReturnsAsync(rates);
             await transactionBusiness.GetTransactionsBySkuCode(new TransactionModel { Sku = string.Empty });
 
             Assert.That(await transactionBusiness.GetTotalPriceTransactions, Is.EqualTo(totalPrice), "Total Price is not equal");

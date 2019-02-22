@@ -35,7 +35,7 @@ namespace GNB.Api.Tests.Controllers
         public async Task GetAllTransactions(IEnumerable<RateModel> rates)
         {
             Mock<IRateService<RateModel>> mock = new Mock<IRateService<RateModel>>();
-            mock.Setup(opt => opt.GetRates()).ReturnsAsync(rates);
+            mock.Setup(opt => opt.TryGetRates()).ReturnsAsync(rates);
             RateController controller = new RateController(mock.Object);
             IEnumerable<RateModel> response = await controller.GetAllRates();
             Assert.That(response.Count(), Is.EqualTo(rates.Count()));

@@ -36,7 +36,7 @@ namespace GNB.Api.Tests.Services
             herokuAppCliente.Setup(setUp => setUp.GetStringRates()).ReturnsAsync(JSON);
             streamUtility.Setup(setUp => setUp.ConvertStringToStream(JSON)).ReturnsAsync(new MemoryStream(Encoding.ASCII.GetBytes(JSON)));
             RateService<RateModel> service = new RateService<RateModel>(herokuAppCliente.Object, streamUtility.Object);
-            IEnumerable<RateModel> result = await service.GetRates();
+            IEnumerable<RateModel> result = await service.TryGetRates();
             return result.Count();
         }
     }

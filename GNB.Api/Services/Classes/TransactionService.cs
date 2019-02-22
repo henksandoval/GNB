@@ -13,15 +13,23 @@ namespace GNB.Api.Services
         private readonly IHerokuAppClient herokuAppClient;
         private readonly IStreamUtility<T> streamUtility;
 
-        public IStreamUtility<T> Stream { get; private set; }
-
         public TransactionService(IHerokuAppClient herokuAppClient, IStreamUtility<T> streamUtility)
         {
             this.herokuAppClient = herokuAppClient;
             this.streamUtility = streamUtility;
         }
 
-        public async Task<IEnumerable<T>> TryGetTransactions() => await GetTransactions();
+        public async Task<IEnumerable<T>> TryGetTransactions()
+        {
+            try
+            {
+                return await GetTransactions();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
 
         public async Task<IEnumerable<T>> TryGetTransactions(Func<T, bool> predicate)
         {
@@ -31,9 +39,16 @@ namespace GNB.Api.Services
 
         private async Task<IEnumerable<T>> GetTransactions()
         {
-            string transactions = await GetTransactionsOfClient();
-            Stream stream = await streamUtility.ConvertStringToStream(transactions);
-            return await StreamUtility<T>.ConvertStreamToModel(stream);
+            try
+            {
+                string transactions = await GetTransactionsOfClient();
+                Stream stream = await streamUtility.ConvertStringToStream(transactions);
+                return await StreamUtility<T>.ConvertStreamToModel(stream);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         private async Task<string> GetTransactionsOfClient() => await herokuAppClient.GetStringTransactions();

@@ -25,7 +25,7 @@ namespace GNB.Api.Business
         {
 
             Task<IEnumerable<TransactionModel>> getTransactions = transactionService.TryGetTransactions(x => x.Sku == transactionModel.Sku);
-            Task<IEnumerable<RateModel>> getRates = rateService.GetRates();
+            Task<IEnumerable<RateModel>> getRates = rateService.TryGetRates();
 
             await Task.WhenAll(getTransactions, getRates);
 

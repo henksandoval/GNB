@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,6 +18,16 @@ namespace GNB.Api.Clients
 
         public Task<string> GetStringRates() => HttpClient.GetStringAsync(REQUEST_URI_RATES);
 
-        public Task<string> GetStringTransactions() => HttpClient.GetStringAsync(REQUEST_URI_TRANSACTIONS);
+        public Task<string> GetStringTransactions()
+        {
+            try
+            {
+                return HttpClient.GetStringAsync(REQUEST_URI_TRANSACTIONS);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.InnerException?.Message, e.InnerException);
+            }
+        }
     }
 }

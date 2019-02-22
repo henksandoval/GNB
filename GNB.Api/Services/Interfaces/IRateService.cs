@@ -6,6 +6,6 @@ namespace GNB.Api.Services
 {
     public interface IRateService<T> where T : class
     {
-        Task<IEnumerable<T>> GetRates();
+        Task<IEnumerable<T>> TryGetRates();
     }
 }
