@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GNB.Api.Tests.Business
 {
@@ -15,25 +14,7 @@ namespace GNB.Api.Tests.Business
         private Mock<ITransactionService<TransactionModel>> transactionService;
         private Mock<IRateService<RateModel>> rateService;
         private TransactionBusiness transactionBusiness;
-
-        [SetUp]
-        public void SetUp()
-        {
-            transactionService = new Mock<ITransactionService<TransactionModel>>();
-            rateService = new Mock<IRateService<RateModel>>();
-            transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
-        }
-
-        public static IEnumerable<TestCaseData> TransactionSource()
-        {
-            yield return new TestCaseData().SetName("GetResultBySkuCode").SetCategory("UnitTest");
-        }
-
-        [TestCase(Category = "UnitTest")]
-        public void GetTransactionsBySkuCode()
-        {
-            (IEnumerable<TransactionModel> TransactionsList, TransactionModel FilteringCondition, IEnumerable<TransactionModel> FilteredList, decimal TotalPrice) rules = 
-            (
+        private (IEnumerable<TransactionModel> TransactionsList, TransactionModel FilteringCondition, IEnumerable<TransactionModel> FilteredList, decimal TotalPrice) Validations => (
                 TransactionsList: new List<TransactionModel>
                     {
                         new TransactionModel { Sku = "T2006", Amount = 10.00m, Currency = "USD" },
@@ -51,73 +32,26 @@ namespace GNB.Api.Tests.Business
                 TotalPrice: 14.99m
             );
 
-
-            IEnumerable<TransactionModel> expectedResult = new List<TransactionModel> {
-                new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
-                new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-            };
-
-            IEnumerable<TransactionModel> re = new List<TransactionModel> {
-                new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
-                new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-            };
-
-            var d = expectedResult;
-
-            transactionService.Setup(opt => opt.GetTransactions()).ReturnsAsync(rules.TransactionsList);
-            IEnumerable<TransactionModel> result = transactionBusiness.GetTransactionsBySkuCode(rules.FilteringCondition);
-            var sum = result.Sum(x => x.Amount);
-            Assert.That(sum, Is.EqualTo(rules.TotalPrice));
-            Assert.AreEqual(expectedResult, result);
-        }
-
-        [Test]
-        public void Test()
+        [SetUp]
+        public void SetUp()
         {
-            IEnumerable<TransactionModel> expectedResult = new List<TransactionModel> {
-                new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
-                new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-            };
-
-            IEnumerable<TransactionModel> result = new List<TransactionModel> {
-                new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" },
-                new TransactionModel { Sku = "T2006", Amount = 7.63m, Currency = "EUR" },
-            };
-
-            var result2 = expectedResult;
-
-            Assert.AreEqual(expectedResult.ToList(), result.ToList());
+            transactionService = new Mock<ITransactionService<TransactionModel>>();
+            rateService = new Mock<IRateService<RateModel>>();
+            transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
         }
 
-
-        [Test]
-        public void Test3()
+        [TestCase(Category = "UnitTest")]
+        public void GetTransactionsBySkuCode()
         {
-            var result = new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" };
+            var (TransactionsList, FilteringCondition, FilteredList, TotalPrice) = Validations;
 
-            var expectedResult = new TransactionModel { Sku = "T2006", Amount = 7.36m, Currency = "EUR" };
+            transactionService.Setup(opt => opt.GetTransactions()).ReturnsAsync(TransactionsList);
+            IEnumerable<TransactionModel> result = transactionBusiness.GetTransactionsBySkuCode(FilteringCondition);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.That(result.Sum(x => x.Amount), Is.EqualTo(TotalPrice));
+            Assert.AreEqual(FilteredList, result);
         }
 
-        [Test]
-        public void Test2()
-        {
-            IEnumerable<string> expectedResult = new List<string> {
-                "HENK",
-                "ALEXANDER",
-                "SANDOVAL",
-            };
 
-            IEnumerable<string> result = new List<string> {
-                "HENK",
-                "ALEXANDER",
-                "SANDOVAL",
-            };
-
-            var result2 = expectedResult;
-
-            Assert.AreNotSame(expectedResult, result);
-        }
     }
 }
