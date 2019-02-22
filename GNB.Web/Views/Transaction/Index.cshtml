@@ -3,21 +3,17 @@
 @{
     ViewData["Title"] = "Index";
 }
-<link href="~/lib/datatables/media/css/dataTables.bootstrap4.css" rel="stylesheet" />
-<link href="~/lib/sweetalert/sweetalert.css" rel="stylesheet" />
 <div class="container-fluid">
     <div class="row page-titles">
-        <!--Título-->
         <div class="col-md-5 align-self-center">
-            <h3 class="text-themecolor">Géneros</h3>
+            <h3 class="text-themecolor">Transactions</h3>
         </div>
-        <!--Navegación>-->
         <div class="col-md-7 align-self-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="javascript:void(0)">Configuraciones</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                 </li>
-                <li class="breadcrumb-item active">Géneros</li>
+                <li class="breadcrumb-item active">Transactions</li>
             </ol>
         </div>
     </div>
@@ -25,8 +21,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Lista de Géneros</h4>
-                    <a class="btn btn-primary pull-right" asp-action="CrearGenero">Crear Género</a>
+                    <h4 class="card-title">List of transactions</h4>
                     <div class="table-responsive m-t-40">
                         <table id="tablaGeneros" class="table table-bordered table-striped">
                             <thead>

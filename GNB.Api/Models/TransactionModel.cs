@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace GNB.Api.Models
 {
@@ -20,5 +21,7 @@ namespace GNB.Api.Models
                 return false;
             return Sku == toCompareWith.Sku && Amount == toCompareWith.Amount && Currency == toCompareWith.Currency;
         }
+
+        public override int GetHashCode() => HashCode.Combine(Sku, Amount, Currency);
     }
 }

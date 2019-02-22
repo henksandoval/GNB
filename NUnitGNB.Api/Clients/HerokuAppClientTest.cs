@@ -35,7 +35,7 @@ namespace GNB.Api.Tests.Clients
         }
 
 
-        [TestCase(Category = "UnitTest")]
+        //[TestCase(Category = "UnitTest")]
         public void ThrowOnBadRequest()
         {
             HerokuAppClient request = new HerokuAppClient(new HttpClient
