@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 
 # Custom ignore in project
-wwwroot/lib/thirdPartyLibrary/
+*/wwwroot/lib/thirdPartyLibrary/
