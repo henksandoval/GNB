@@ -26,7 +26,11 @@ namespace GNB.Web.Controllers
             string searchSku = dataTable.GetParameterInCustomSearchByName("sku");
             string searchCurrency = dataTable.GetParameterInCustomSearchByName("currency");
 
-            IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions(x => x.Sku.ToLower() == searchSku.ToLower() && x.Currency.ToLower() == searchCurrency.ToLower());
+            IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions();
+
+            transactions
+                .WhereIf(!searchSku.IsNullOrEmpty(), x => x.Sku.ToLower() == searchSku.ToLower())
+                .WhereIf(!searchCurrency.IsNullOrEmpty(), x => x.Currency.ToLower() == searchCurrency.ToLower());
 
             return Ok(dataTable.GetPropertiesDataTable(transactions));
         }
