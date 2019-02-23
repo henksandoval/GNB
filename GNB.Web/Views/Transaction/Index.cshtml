@@ -1,0 +1,67 @@
+﻿@using GNB.Web.Models
+@model IEnumerable<TransactionModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<link href="~/lib/datatables/media/css/dataTables.bootstrap4.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Transactions</h3>
+        </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="breadcrumb-item active">Transactions</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background-color: #25a7c1">
+                    <div class="row">
+                        <div class="col-11">
+                            <span class="card-title text-white"><i class="fa fa-table"></i> Transactions</span>
+                        </div>
+                        <div class="col-1">
+                            <div class="card-actions float-right text-white cursor-pointer">
+                                <a data-action="collapse"><i class="ti-minus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body collapse show">
+                    <div class="form-body">
+                        <div class="card-body">
+                            <div class="table-responsive m-t-40">
+                                <div class="col-12">
+                                    <table id="tableTransactions" class="table table-bordered table-striped" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Correo</th>
+                                                <th class="text-center">Usuario</th>
+                                                <th class="text-center">Nombre</th>
+                                                <th class="text-center">Numero documento</th>
+                                                <th class="text-center">Estatus</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/datatables/datatables.min.js"></script>
+<script src="~/js/CustomDataTable.js"></script>
+<script src="~/js/App/TransactionIndex.js"></script>

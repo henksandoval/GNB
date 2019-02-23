@@ -5,10 +5,32 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Transaction\TransactionForm.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\bootstrap\css\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\bootstrap\js\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\datatables.net\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery-validation-unobtrusive\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery-validation\localization\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\perfect-scrollbar\css\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\perfect-scrollbar\js\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\sweetalert2\" />
   </ItemGroup>
 
 </Project>

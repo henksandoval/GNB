@@ -8,7 +8,7 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class TransactionController : ControllerBase
+    public class TransactionController : ControllerBase
     {
         private readonly ITransactionService<TransactionModel> TransactionService;
 
@@ -18,6 +18,7 @@ namespace GNB.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TransactionModel>> GetTransactions() => await TransactionService.GetTransactions();
+        public async Task<IEnumerable<TransactionModel>> GetAllTransactions() =>
+            await TransactionService.TryGetTransactions();
     }
 }

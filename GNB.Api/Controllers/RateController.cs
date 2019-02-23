@@ -8,7 +8,7 @@ namespace GNB.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class RateController : ControllerBase
+    public class RateController : ControllerBase
     {
         private readonly IRateService<RateModel> RateService;
 
@@ -18,7 +18,7 @@ namespace GNB.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<RateModel>> GetRates() => await RateService.GetRates();
-
+        public async Task<IEnumerable<RateModel>> GetAllRates() => 
+            await RateService.TryGetRates();
     }
 }

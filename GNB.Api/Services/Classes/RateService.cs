@@ -1,29 +1,29 @@
 ﻿using GNB.Api.Clients;
-using GNB.Api.Utilities;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Services
 {
     public class RateService<T> : IRateService<T> where T : class
     {
-        private readonly IHerokuAppClient HerokuAppClient;
-        private readonly IStreamUtility StreamUtility;
+        private readonly IHerokuAppClient herokuAppClient;
 
-        public RateService(IHerokuAppClient herokuAppClient, IStreamUtility streamUtility)
+        public RateService(IHerokuAppClient herokuAppClient)
         {
-            HerokuAppClient = herokuAppClient;
-            StreamUtility = streamUtility;
+            this.herokuAppClient = herokuAppClient;
         }
 
-        public async Task<IEnumerable<T>> GetRates()
+        public async Task<IEnumerable<T>> TryGetRates() => await GetRates();
+
+        public async Task<IEnumerable<T>> TryGetRates(Func<T, bool> predicate)
         {
-            string Rates = await GetRatesOfClient();
-            Stream stream = await StreamUtility.ConvertStringToStream(Rates);
-            return await ConvertStreamUtility<T>.ConvertStreamToModel(stream);
+            IEnumerable<T> data = await GetRates();
+            return data.Where(predicate);
         }
 
-        private async Task<string> GetRatesOfClient() => await HerokuAppClient.GetStringRates();
+        private async Task<IEnumerable<T>> GetRates() => JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringRates());
     }
 }

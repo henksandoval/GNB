@@ -19,7 +19,7 @@
     },
     "GNB.Api": {
       "commandName": "Project",
-      "launchUrl": "api/values",
+      "launchUrl": "api/transaction",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
