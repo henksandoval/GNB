@@ -27,6 +27,8 @@
     "sweetalert2": "^8.2.3"
   },
   "devDependencies": {
-    "gulp": "^4.0.0"
+    "gulp": "^4.0.0",
+    "merge-stream": "^1.0.1",
+    "rimraf": "^2.6.3"
   }
 }
