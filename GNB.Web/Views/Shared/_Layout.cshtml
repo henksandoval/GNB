@@ -7,15 +7,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @Html.NameApplication()</title>
 
-    <link href="~/lib/thirdPartyLibrary/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/lib/thirdPartyLibrary/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+    <environment include="Development">
+        <link href="~/lib/thirdPartyLibrary/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/thirdPartyLibrary/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+        <script src="~/lib/thirdPartyLibrary/jquery/jquery.js"></script>
+        <script src="~/lib/thirdPartyLibrary/jquery-validation/jquery.validate.js"></script>
+        <script src="~/lib/thirdPartyLibrary/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    </environment>
+
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/thirdPartyLibrary/bootstrap/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/css/perfect-scrollbar.min.css"
+              asp-fallback-href="~/lib/thirdPartyLibrary/perfect-scrollbar/css/perfect-scrollbar.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/thirdPartyLibrary/jquery/jquery.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"
+                asp-fallback-src="~/lib/thirdPartyLibrary/jquery-validation/jquery.validate.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"
+                asp-fallback-src="~/lib/thirdPartyLibrary/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive">
+        </script>
+    </environment>
+
     <link href="~/css/style.css" rel="stylesheet" />
     <link href="~/css/ApplicationStyleSheet.css" rel="stylesheet" />
     <link href="~/css/colors/default.css" rel="stylesheet" />
-
-    <script src="~/lib/thirdPartyLibrary/jquery/jquery.min.js"></script>
-    <script src="~/lib/thirdPartyLibrary/jquery-validation/jquery.validate.js"></script>
-    <script src="~/lib/thirdPartyLibrary/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 </head>
 <body id="bodyLayout" class="fix-header fix-sidebar card-no-border">
     <div class="preloader">
@@ -35,8 +60,22 @@
         </div>
     </div>
 
-    <script src="~/lib/thirdPartyLibrary/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/lib/thirdPartyLibrary/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
+    <environment include="Development">
+        <script src="~/lib/thirdPartyLibrary/bootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/thirdPartyLibrary/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/thirdPartyLibrary/bootstrap/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.4.0/perfect-scrollbar.min.js"
+                asp-fallback-src="~/lib/thirdPartyLibrary/perfect-scrollbar/js/perfect-scrollbar.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+        </script>
+    </environment>
+
+
     <script src="~/lib/application/custom.min.js"></script>
 
     @RenderSection("Scripts", required: false)

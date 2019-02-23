@@ -22,7 +22,15 @@
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\thirdPartyLibrary\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\bootstrap\css\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\bootstrap\js\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\datatables.net\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery-validation-unobtrusive\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery-validation\localization\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\jquery\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\perfect-scrollbar\css\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\perfect-scrollbar\js\" />
+    <Folder Include="wwwroot\lib\thirdPartyLibrary\sweetalert2\" />
   </ItemGroup>
 
 </Project>
