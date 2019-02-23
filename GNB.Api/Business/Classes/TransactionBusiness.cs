@@ -1,5 +1,6 @@
 ﻿using GNB.Api.Models;
 using GNB.Api.Services;
+using GNB.Api.Utilities;
 using GNB.Api.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +11,20 @@ namespace GNB.Api.Business
     public class TransactionBusiness : ITransactionBusiness
     {
         private readonly ITransactionService<TransactionModel> transactionService;
-        private readonly IRateService<RateModel> rateService;
+        private readonly ICurrencyConverter currencyConverter;
         private IEnumerable<TransactionModel> Transactions;
         private IEnumerable<RateModel> Rates;
         private const string CurrencyConversion = "EUR";
 
-        public TransactionBusiness(ITransactionService<TransactionModel> transactionService, IRateService<RateModel> rateService)
+        public TransactionBusiness(ITransactionService<TransactionModel> transactionService, ICurrencyConverter currencyConverter)
         {
             this.transactionService = transactionService;
-            this.rateService = rateService;
+            this.currencyConverter = currencyConverter;
         }
 
         public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions()
         {
-            Task<IEnumerable<TransactionModel>> transactions = transactionService.TryGetTransactions();
-            Task<IEnumerable<RateModel>> rates = rateService.TryGetRates();
+            IEnumerable<TransactionModel> transactions = await transactionService.TryGetTransactions();
 
             await Task.WhenAll(transactions, rates);
 
@@ -52,6 +52,7 @@ namespace GNB.Api.Business
 
             IEnumerable<TransactionViewModel> data = Transactions.Where(x => x.Currency != "EUR").Select(transaction => SetCurrencyConversion(transaction));
         }
+
         private TransactionViewModel SetCurrencyConversion(TransactionModel model)
         {
             TransactionModel condition = model;
@@ -71,9 +72,20 @@ namespace GNB.Api.Business
             {
                 viewModel.AmountConverted = GetMount(Rates.SingleOrDefault(x => x.From == condition.Currency && x.To == CurrencyConversion), model);
             }
-            else
+            else if (Rates.Any(x => x.To == condition.Currency && x.From == CurrencyConversion))
             {
                 viewModel.AmountConverted = GetMount2(Rates.SingleOrDefault(x => x.To == condition.Currency && x.From == CurrencyConversion), model);
+            }
+            else if(Rates.Any(x => x.From == condition.Currency) || Rates.Any(x => x.To == condition.Currency))
+            {
+                var monedaEncontrada = false;
+                //while (!monedaEncontrada)
+                //{
+                //    var rate = Rates.SingleOrDefault(x => x.From == condition.Currency);
+
+                    
+                //}
+                viewModel.AmountConverted = GetMount2(Rates.SingleOrDefault(x => x.From == CurrencyConversion && x.To == condition.Currency), model);
             }
 
             return viewModel;

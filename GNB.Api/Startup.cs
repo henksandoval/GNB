@@ -2,6 +2,7 @@
 using GNB.Api.Clients;
 using GNB.Api.Models;
 using GNB.Api.Services;
+using GNB.Api.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ namespace GNB.Api
             IConfigurationSection uriHerokuApp = Configuration.GetSection("UriHerokuApp");
 
             services.AddSingleton<IRateService<RateModel>, RateService<RateModel>>();
+            services.AddSingleton<ICurrencyConverter, CurrencyConverter>();
+
             services.AddSingleton<ITransactionBusiness, TransactionBusiness>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
 

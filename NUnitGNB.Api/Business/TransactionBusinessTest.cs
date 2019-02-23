@@ -1,6 +1,7 @@
 ﻿using GNB.Api.Business;
 using GNB.Api.Models;
 using GNB.Api.Services;
+using GNB.Api.Utilities;
 using GNB.Api.ViewModels;
 using Moq;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace GNB.Api.Tests.Business
     internal class TransactionBusinessTest
     {
         private Mock<ITransactionService<TransactionModel>> transactionService;
-        private Mock<IRateService<RateModel>> rateService;
+        private Mock<ICurrencyConverter> currencyConverter;
         private TransactionBusiness transactionBusiness;
 
 
@@ -21,8 +22,8 @@ namespace GNB.Api.Tests.Business
         public void SetUp()
         {
             transactionService = new Mock<ITransactionService<TransactionModel>>();
-            rateService = new Mock<IRateService<RateModel>>();
-            transactionBusiness = new TransactionBusiness(transactionService.Object, rateService.Object);
+            currencyConverter = new Mock<ICurrencyConverter>();
+            transactionBusiness = new TransactionBusiness(transactionService.Object, currencyConverter.Object);
         }
 
         [TestCaseSource(typeof(TransactionBusinessTest), "SomeTestsCases")]
@@ -129,6 +130,26 @@ namespace GNB.Api.Tests.Business
                             new TransactionViewModel { Sku = "T2007", Amount = 6.23m, Currency = "EUR", AmountConverted = 6.23m, CurrencyConverted = "EUR"},
                         }
                 ).SetName("FilterDataAndComplexConversion");
+                yield return new TestCaseData
+                (
+                    new List<TransactionModel>
+                        {
+                            new TransactionModel { Sku = "T2007", Amount = 28.5m, Currency = "USD" },
+                        },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "AUD", To = "CAD", Rate = 0.56m },
+                            new RateModel { From = "CAD", To = "AUD", Rate = 1.79m },
+                            new RateModel { From = "AUD", To = "USD", Rate = 0.92m },
+                            new RateModel { From = "USD", To = "AUD", Rate = 1.09m },
+                            new RateModel { From = "CAD", To = "EUR", Rate = 0.65m },
+                            new RateModel { From = "EUR", To = "CAD", Rate = 1.54m },
+                        },
+                    new List<TransactionViewModel>
+                        {
+                            new TransactionViewModel { Sku = "T2007", Amount = 28.5m, Currency = "USD", AmountConverted = 11.31m, CurrencyConverted = "EUR" },
+                        }
+                ).SetName("CascadeComplexConversion");
             }
         }
     }
