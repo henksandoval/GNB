@@ -1,4 +1,4 @@
-﻿function DataTable(urlRequest, idElement, columnsDataTable, filteredConditions) {
+﻿function CustomDatatable(urlRequest, idElement, functionSearch) {
     const LanguageDataTable = {
         "sProcessing": `
         <div class="row">
@@ -34,8 +34,8 @@
     };
     this.UrlRequest = urlRequest;
     this.IdTagHtml = idElement;
-    this.Columns = columnsDataTable;
-    this.FilteredConditions = filteredConditions;
+    this.Columns;
+    this.FunctionSearch = functionSearch;
     this.ElementTable;
     this.Searching = true;
     this.Processing = true;
@@ -45,14 +45,14 @@
     this.Order = [];
     this.TypeRequest = "POST";
     this.DataType = "json";
-    this.PageLength = 10;
+    this.PageLength = 50;
 
 
     this.GenerateDatatable = async () => {
         this.ElementTable = $(`#${this.IdTagHtml}`);
 
-        if ($.fn.DataTable.isDataTable(`#${overload.idElement}`)) {
-            $(`#${overload.idElement}`).DataTable().destroy();
+        if ($.fn.DataTable.isDataTable(`#${this.IdTagHtmlt}`)) {
+            $(`#${this.IdTagHtml}`).DataTable().destroy();
         }
 
         this.ElementTable.DataTable({
@@ -67,8 +67,8 @@
                 type: "POST",
                 dataType: "json",
                 data: (infFilter, infDataTable) => {
-                    if (overload.hasOwnProperty('ajaxData')) {
-                        return overload.ajaxData(infFilter, infDataTable);
+                    if (this.FunctionSearch) {
+                        return this.FunctionSearch(infFilter, infDataTable);
                     }
                 },
             },
@@ -76,15 +76,15 @@
             columns: this.Columns,
             pageLength: this.PageLength,
             initComplete: function (settings, json) {
-                totalizarColumnas(this);
+                this.TotalizeColumns();
             }
         });
 
-        this.AlterStylesProcessing(overload.idElement);
+        this.AlterStylesProcessing();
     };
 
-    this.TotalizeColumns = (tabla) => {
-        tabla.api().columns('.sum').every(function () {
+    this.TotalizeColumns = () => {
+        this.ElementTable.api().columns('.sum').every(function () {
             let column = this;
 
             var sum = column
