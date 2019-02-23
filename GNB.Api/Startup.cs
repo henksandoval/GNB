@@ -1,4 +1,5 @@
-﻿using GNB.Api.Clients;
+﻿using GNB.Api.Business;
+using GNB.Api.Clients;
 using GNB.Api.Models;
 using GNB.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace GNB.Api
             IConfigurationSection uriHerokuApp = Configuration.GetSection("UriHerokuApp");
 
             services.AddSingleton<IRateService<RateModel>, RateService<RateModel>>();
+            services.AddSingleton<ITransactionBusiness, TransactionBusiness>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
 
             services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
