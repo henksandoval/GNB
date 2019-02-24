@@ -1,10 +1,10 @@
-﻿using GNB.Api.Models;
+﻿using GNB.Api.App.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GNB.Api.ViewModels
+namespace GNB.Api.App.ViewModels
 {
     public class TransactionViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using GNB.Api.ViewModels;
+using GNB.Api.App.ViewModels;
 
-namespace GNB.Api.Utilities
+namespace GNB.Api.App.Utilities
 {
     public interface ICurrencyConverter
     {

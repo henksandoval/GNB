@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GNB.Api.Models
+namespace GNB.Api.App.Models
 {
     public class RateModel
     {

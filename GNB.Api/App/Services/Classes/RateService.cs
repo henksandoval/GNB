@@ -1,11 +1,11 @@
-﻿using GNB.Api.Clients;
+﻿using GNB.Api.App.Clients;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GNB.Api.Services
+namespace GNB.Api.App.Services
 {
     public class RateService<T> : IRateService<T> where T : class
     {

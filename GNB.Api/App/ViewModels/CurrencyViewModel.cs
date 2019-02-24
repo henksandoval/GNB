@@ -1,4 +1,4 @@
-﻿namespace GNB.Api.ViewModels
+﻿namespace GNB.Api.App.ViewModels
 {
     public class CurrencyViewModel
     {

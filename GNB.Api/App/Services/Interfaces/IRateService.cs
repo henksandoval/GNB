@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using GNB.Api.Models;
+using GNB.Api.App.Models;
 
-namespace GNB.Api.Services
+namespace GNB.Api.App.Services
 {
     public interface IRateService<T> where T : class
     {

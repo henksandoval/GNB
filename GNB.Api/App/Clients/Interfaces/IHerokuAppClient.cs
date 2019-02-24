@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace GNB.Api.Clients
+namespace GNB.Api.App.Clients
 {
     public interface IHerokuAppClient
     {

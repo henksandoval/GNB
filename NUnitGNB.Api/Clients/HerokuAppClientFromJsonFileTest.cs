@@ -1,23 +1,21 @@
 ﻿using GNB.Api.App.Clients;
 using NUnit.Framework;
 using System;
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GNB.Api.Tests.Clients
 {
     [TestFixture]
-    internal class HerokuAppClientTest
+    class HerokuAppClientFromJsonFileTest
     {
-        private HerokuAppClient herokuAppClient;
+        private HerokuAppClientFromJsonFile herokuAppClient;
 
         [SetUp]
         public void SetUp()
         {
-            herokuAppClient = new HerokuAppClient(new HttpClient
-            {
-                BaseAddress = new Uri("http://quiet-stone-2094.herokuapp.com")
-            });
+            herokuAppClient = new HerokuAppClientFromJsonFile();
         }
 
         [TestCase(Category = "UnitTest")]

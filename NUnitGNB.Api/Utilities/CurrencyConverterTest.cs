@@ -1,7 +1,7 @@
-﻿using GNB.Api.Models;
-using GNB.Api.Services;
-using GNB.Api.Utilities;
-using GNB.Api.ViewModels;
+﻿using GNB.Api.App.Models;
+using GNB.Api.App.Services;
+using GNB.Api.App.Utilities;
+using GNB.Api.App.ViewModels;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;

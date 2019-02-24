@@ -1,13 +1,13 @@
-﻿using GNB.Api.Models;
-using GNB.Api.Services;
-using GNB.Api.Utilities;
-using GNB.Api.ViewModels;
+﻿using GNB.Api.App.Models;
+using GNB.Api.App.Services;
+using GNB.Api.App.Utilities;
+using GNB.Api.App.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GNB.Api.Business
+namespace GNB.Api.App.Business
 {
     public class TransactionBusiness : ITransactionBusiness
     {
@@ -23,9 +23,9 @@ namespace GNB.Api.Business
             this.currencyConverter = currencyConverter;
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetAllTransactions()
+        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions()
         {
-            IEnumerable<TransactionModel> transactions = await transactionService.TryGetTransactions();
+            IEnumerable<TransactionViewModel> transactions = (await transactionService.TryGetTransactions()).Select(x => new TransactionViewModel(x));
 
             return transactions;
         }

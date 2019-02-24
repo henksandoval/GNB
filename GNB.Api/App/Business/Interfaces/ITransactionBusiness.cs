@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using GNB.Api.Models;
-using GNB.Api.ViewModels;
+using GNB.Api.App.Models;
+using GNB.Api.App.ViewModels;
 
-namespace GNB.Api.Business
+namespace GNB.Api.App.Business
 {
     public interface ITransactionBusiness
     {
-        Task<IEnumerable<TransactionModel>> GetAllTransactions();
+        Task<IEnumerable<TransactionViewModel>> GetAllTransactions();
         Task<IEnumerable<TransactionViewModel>> GetAllTransactionsWithNewCurrency(string newCurrency);
     }
 }

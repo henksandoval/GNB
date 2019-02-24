@@ -1,12 +1,12 @@
-﻿using GNB.Api.Models;
-using GNB.Api.Services;
-using GNB.Api.ViewModels;
+﻿using GNB.Api.App.Models;
+using GNB.Api.App.Services;
+using GNB.Api.App.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GNB.Api.Utilities
+namespace GNB.Api.App.Utilities
 {
     public class CurrencyConverter : ICurrencyConverter
     {

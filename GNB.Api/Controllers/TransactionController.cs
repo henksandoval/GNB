@@ -1,5 +1,5 @@
-﻿using GNB.Api.Business;
-using GNB.Api.ViewModels;
+﻿using GNB.Api.App.Business;
+using GNB.Api.App.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,8 +17,8 @@ namespace GNB.Api.Controllers
             TransactionBusiness = transactionService;
         }
 
-        //[HttpGet]
-        //public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions() =>
-        //    await TransactionBusiness.GetAllTransactions();
+        [HttpGet]
+        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions() =>
+            await TransactionBusiness.GetAllTransactions();
     }
 }
