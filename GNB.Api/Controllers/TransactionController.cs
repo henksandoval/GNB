@@ -17,8 +17,8 @@ namespace GNB.Api.Controllers
             TransactionBusiness = transactionService;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions() =>
-            await TransactionBusiness.GetAllTransactions();
+        //[HttpGet]
+        //public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions() =>
+        //    await TransactionBusiness.GetAllTransactions();
     }
 }

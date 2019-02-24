@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GNB.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,10 +14,31 @@ namespace GNB.Api.ViewModels
 
         public string Currency { get; set; }
 
-        public decimal AmountConverted { get; set; }
+        public decimal AmountConverted { get; private set; }
 
         public string CurrencyConverted { get; set; }
 
+        public TransactionViewModel() { }
+
+        public TransactionViewModel(TransactionModel model)
+        {
+            Sku = model.Sku;
+            Amount = model.Amount;
+            Currency = model.Currency;
+        }
+
+        public void UpdateAmountTransactionByChangeCurrency(string newCurrency)
+        {
+            if (Currency != newCurrency)
+            {
+
+            }
+            else
+            {
+                AmountConverted = Amount;
+                CurrencyConverted = Currency;
+            }
+        }
 
         public override bool Equals(object other)
         {

@@ -7,7 +7,7 @@ namespace GNB.Api.Business
 {
     public interface ITransactionBusiness
     {
-        Task<IEnumerable<TransactionViewModel>> GetAllTransactions();
-        Task GetTransactionsBySkuCode(TransactionModel transactionModel);
+        Task<IEnumerable<TransactionModel>> GetAllTransactions();
+        Task<IEnumerable<TransactionViewModel>> GetAllTransactionsWithNewCurrency(string newCurrency);
     }
 }
