@@ -1,7 +1,7 @@
 ﻿using GNB.Api.Models;
 using GNB.Api.Services;
 using GNB.Api.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,75 +11,90 @@ namespace GNB.Api.Utilities
     public class CurrencyConverter : ICurrencyConverter
     {
         private readonly IRateService<RateModel> service;
-        private IEnumerable<RateModel> rates;
-
-        public string CurrentCurrency { get; set; }
-
-        public decimal CurrentAmount { get; set; }
-
-        public string RequiredCurrency { get; set; }
-
-        public decimal AmountConverted { get; private set; }
+        private const int DECIMAL_PLACES = 8;
 
         public CurrencyConverter(IRateService<RateModel> service)
         {
             this.service = service;
         }
 
-        public async Task ApplyConversion(CurrencyViewModel currency, string requiredCurrency)
-        {
-            CurrentCurrency = currency.Name;
-            CurrentAmount = currency.Amount;
-            RequiredCurrency = requiredCurrency;
-            AmountConverted = await CalculateNewAmount();
-        }
+        public async Task<TransactionViewModel> ApplyConversion(TransactionViewModel transaction) =>
+            Equals(transaction.Currency, transaction.CurrencyConverted)
+                ? AssignSameAmountToTransaction(transaction)
+                : await CalculateNewAmountToTransaction(transaction);
 
-        private async Task<decimal> CalculateNewAmount()
+        private async Task<TransactionViewModel> CalculateNewAmountToTransaction(TransactionViewModel transaction) =>
+            new TransactionViewModel
+            {
+                Sku = transaction.Sku,
+                Currency = transaction.Currency,
+                Amount = transaction.Amount,
+                CurrencyConverted = transaction.CurrencyConverted,
+                AmountConverted = await CalculateNewAmount(transaction)
+            };
+
+        private TransactionViewModel AssignSameAmountToTransaction(TransactionViewModel transaction) =>
+            new TransactionViewModel
+            {
+                Sku = transaction.Sku,
+                Currency = transaction.Currency,
+                Amount = transaction.Amount,
+                CurrencyConverted = transaction.CurrencyConverted,
+                AmountConverted = transaction.AmountConverted
+            };
+
+        private async Task<decimal> CalculateNewAmount(TransactionViewModel transaction)
         {
-            decimal currentAmount = CurrentAmount;
-            string currentCurrency = CurrentCurrency;
+            decimal currentAmount = transaction.Amount;
+            string currentCurrency = transaction.Currency;
 
             bool newAmountCalculated = false;
-            rates = await service.TryGetRates();
+            IEnumerable<RateModel> rates = await service.TryGetRates();
 
             while (!newAmountCalculated)
             {
-                if (rates.Any(x => x.From == currentCurrency && x.To == RequiredCurrency))
+                if (rates.Any(x => x.From == currentCurrency && x.To == transaction.CurrencyConverted))
                 {
-                    RateModel rate = rates.Single(x => x.From == currentCurrency && x.To == RequiredCurrency);
+                    RateModel rate = rates.Single(x => x.From == currentCurrency && x.To == transaction.CurrencyConverted);
                     currentAmount = ConvertAmountFromTo(currentAmount, rate);
                     currentCurrency = rate.To;
                 }
-                else if (rates.Any(x => x.From == RequiredCurrency && x.To == currentCurrency))
+                else if (rates.Any(x => x.From == transaction.CurrencyConverted && x.To == currentCurrency))
                 {
-                    RateModel rate = rates.Single(x => x.From == RequiredCurrency && x.To == currentCurrency);
+                    RateModel rate = rates.Single(x => x.From == transaction.CurrencyConverted && x.To == currentCurrency);
                     currentAmount = ConvertAmountToFrom(currentAmount, rate);
-                    currentCurrency = rate.To;
+                    currentCurrency = rate.From;
                 }
-                else
+                else if (rates.Any(x => x.From == currentCurrency) || rates.Any(x => x.To == currentCurrency))
                 {
                     if (rates.Any(x => x.From == currentCurrency))
                     {
                         RateModel rate = rates.First(x => x.From == currentCurrency);
+                        rates = rates.Where(x => x.From == rate.From && x.To == rate.To).Where(x => x.From != rate.To && x.To != rate.From).ToList();
                         currentAmount = ConvertAmountFromTo(currentAmount, rate);
                         currentCurrency = rate.To;
                     }
                     else if (rates.Any(x => x.To == currentCurrency))
                     {
                         RateModel rate = rates.First(x => x.To == currentCurrency);
+                        rates = rates.Where(x => !x.Equals(rate));
                         currentAmount = ConvertAmountToFrom(currentAmount, rate);
                         currentCurrency = rate.To;
                     }
                 }
+                else
+                {
+                    throw new ApplicationException($"The type currency conversion not is posible", new Exception($"The ${transaction.CurrencyConverted} not included in list rates"));
+                }
 
-                newAmountCalculated = currentCurrency == RequiredCurrency;
+                newAmountCalculated = Equals(currentCurrency, transaction.CurrencyConverted);
             }
 
             return currentAmount;
         }
 
-        private decimal ConvertAmountFromTo(decimal amount, RateModel rate) => amount * rate.Rate;
+        private decimal ConvertAmountFromTo(decimal amount, RateModel rate) => decimal.Round(amount * rate.Rate, DECIMAL_PLACES);
 
-        private decimal ConvertAmountToFrom(decimal amount, RateModel rate) => amount / rate.Rate;
+        private decimal ConvertAmountToFrom(decimal amount, RateModel rate) => decimal.Round(amount / rate.Rate, DECIMAL_PLACES);
     }
 }

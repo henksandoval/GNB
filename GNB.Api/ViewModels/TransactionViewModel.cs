@@ -14,7 +14,7 @@ namespace GNB.Api.ViewModels
 
         public string Currency { get; set; }
 
-        public decimal AmountConverted { get; private set; }
+        public decimal AmountConverted { get; set; }
 
         public string CurrencyConverted { get; set; }
 
