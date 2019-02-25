@@ -24,8 +24,8 @@ namespace GNB.Web.Tests.Services
         [TestCaseSource(typeof(TransactionServiceTest), "SomeTestCases")]
         public async Task GetAllTransactionsTest(string jsonString, IEnumerable<TransactionModel> expectedResult)
         {
-            apiClient.Setup(opt => opt.GetStringTransactions()).ReturnsAsync(jsonString);
-            IEnumerable<TransactionModel> result = await transactionService.GetAllTransactions();
+            apiClient.Setup(opt => opt.GetStringTransactions(new TransactionModel())).ReturnsAsync(jsonString);
+            IEnumerable<TransactionModel> result = await transactionService.GetAllTransactions(new TransactionModel());
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 

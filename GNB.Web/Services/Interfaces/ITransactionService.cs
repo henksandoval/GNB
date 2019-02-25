@@ -7,6 +7,6 @@ namespace GNB.Web.Services
 {
     public interface ITransactionService
     {
-        Task<IEnumerable<TransactionModel>> GetAllTransactions();
+        Task<IEnumerable<TransactionModel>> GetAllTransactions(TransactionModel model = null);
     }
 }

@@ -26,7 +26,7 @@ namespace GNB.Web.Tests.Controllers
         [TestCaseSource(typeof(TransactionControllerTest), "SomeTestsCases")]
         public void Index(IEnumerable<TransactionModel> expectedResult)
         {
-            transactionRespository.Setup(opt => opt.TryGetAllTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(expectedResult);
+            transactionRespository.Setup(opt => opt.TryGetAllTransactions(new TransactionModel())).ReturnsAsync(expectedResult);
             ViewResult viewResult = controller.Index() as ViewResult;
             IEnumerable<TransactionModel> modelData = viewResult.Model as IEnumerable<TransactionModel>;
 

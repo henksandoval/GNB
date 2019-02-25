@@ -10,6 +10,7 @@ namespace GNB.Api.App.Services
     public class TransactionService<T> : ITransactionService<T> where T : class
     {
         private readonly IHerokuAppClient herokuAppClient;
+        private static IEnumerable<T> data;
 
         public TransactionService(IHerokuAppClient herokuAppClient)
         {
@@ -38,7 +39,12 @@ namespace GNB.Api.App.Services
         {
             try
             {
-                return JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringTransactions());
+                if (data == null)
+                {
+                    data = JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringTransactions());
+                }
+                return data;
+                //return JsonConvert.DeserializeObject<IEnumerable<T>>(await herokuAppClient.GetStringTransactions());
             }
             catch (Exception)
             {

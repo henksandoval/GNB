@@ -32,7 +32,7 @@ namespace GNB.Api.Tests.Business
         {
             transactionService.Setup(opt => opt.TryGetTransactions()).ReturnsAsync(models);
 
-            IEnumerable<TransactionViewModel> result = await transactionBusiness.GetAllTransactionsWithNewCurrency("EUR");
+            IEnumerable<TransactionViewModel> result = await transactionBusiness.GetAllTransactions(new TransactionViewModel { CurrencyConverted = "EUR" });
 
             var changeCurrencyConverted = result.All(x => x.CurrencyConverted == "EUR");
             Assert.IsTrue(changeCurrencyConverted);

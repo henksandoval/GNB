@@ -25,17 +25,21 @@ namespace GNB.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> GetTransactions(DataTableUtility dataTable)
         {
-            string searchSku = dataTable.GetParameterInCustomSearchByName("sku");
-            string searchCurrency = dataTable.GetParameterInCustomSearchByName("currency");
-
             IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions();
-            IEnumerable<TransactionModel> returnData = transactions
-                .WhereIf(!searchSku.IsNullOrEmpty(), x => x.Sku.ToLower() == searchSku.ToLower())
-                .WhereIf(!searchCurrency.IsNullOrEmpty(), x => x.Currency.ToLower() == searchCurrency.ToLower());
-
-            return Ok(dataTable.GetPropertiesDataTable(returnData));
+            return Ok(dataTable.GetPropertiesDataTable(transactions));
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> GetTransactionsNewCurrency(DataTableUtility dataTable)
+        {
+            string searchSku = dataTable.GetParameterInCustomSearchByName("sku");
+
+            IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions(new TransactionModel { Sku = searchSku, Currency = "EUR" });
+            IEnumerable<TransactionModel> returnData = transactions
+                .WhereIf(!searchSku.IsNullOrEmpty(), x => x.Sku.ToLower() == searchSku.ToLower());
+
+            return Ok(dataTable.GetPropertiesDataTable(returnData));
+        }
     }
 }

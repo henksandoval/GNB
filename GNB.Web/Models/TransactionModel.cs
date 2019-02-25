@@ -13,6 +13,11 @@ namespace GNB.Web.Models
 
         public string Currency { get; set; }
 
+        public decimal AmountConverted { get; set; }
+
+        public string CurrencyConverted { get; set; }
+
+
         public override bool Equals(object other)
         {
             if (!(other is TransactionModel toCompareWith))

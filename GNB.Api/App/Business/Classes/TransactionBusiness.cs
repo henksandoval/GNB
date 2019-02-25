@@ -15,7 +15,6 @@ namespace GNB.Api.App.Business
         private readonly ICurrencyConverter currencyConverter;
         private string newCurrency;
         private IEnumerable<TransactionViewModel> transactions;
-        private const string CurrencyConversion = "EUR";
 
         public TransactionBusiness(ITransactionService<TransactionModel> transactionService, ICurrencyConverter currencyConverter)
         {
@@ -30,16 +29,26 @@ namespace GNB.Api.App.Business
             return transactions;
         }
 
-        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactionsWithNewCurrency(string newCurrency)
+        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions(TransactionViewModel viewModel)
         {
-            this.newCurrency = newCurrency;
+            try
+            {
+                newCurrency = viewModel.Currency;
 
-            transactions = (await transactionService.TryGetTransactions()).Select(x => new TransactionViewModel(x));
-            transactions = SetCurrencyConvertedToTransactions();
+                transactions = (await transactionService.TryGetTransactions(x => x.Sku == viewModel.Sku)).Select(x => new TransactionViewModel(x));
+                transactions = SetCurrencyConvertedToTransactions();
 
+                IList<TransactionViewModel> result = new List<TransactionViewModel>();
 
+                TransactionViewModel[] tasks = await Task.WhenAll(transactions.Take(100).Select(transaction => currencyConverter.ApplyConversion(transaction)));
 
-            return transactions;
+                var data = tasks.Where(x => x != null).ToList();
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         private IEnumerable<TransactionViewModel> SetCurrencyConvertedToTransactions()
@@ -50,8 +59,5 @@ namespace GNB.Api.App.Business
                 return x;
             });
         }
-
-        private Task SetCurrencyConverted(TransactionViewModel transaction) =>
-            Task.FromResult(transaction.CurrencyConverted = newCurrency);
     }
 }

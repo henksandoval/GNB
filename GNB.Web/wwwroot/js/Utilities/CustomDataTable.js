@@ -55,6 +55,7 @@
     this.BuildDatatable = async () => {
         this.ElementTable = $(`#${this.IdTagHtml}`);
 
+        debugger
         if ($.fn.DataTable.isDataTable(`#${this.IdTagHtmlt}`)) {
             $(`#${this.IdTagHtml}`).DataTable().destroy();
         }

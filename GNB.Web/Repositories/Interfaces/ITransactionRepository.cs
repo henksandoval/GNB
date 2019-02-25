@@ -7,6 +7,6 @@ namespace GNB.Web.Repositories
 {
     public interface ITransactionRepository
     {
-        Task<IEnumerable<TransactionModel>> TryGetAllTransactions(Func<TransactionModel, bool> predicate = null);
+        Task<IEnumerable<TransactionModel>> TryGetAllTransactions(TransactionModel model = null);
     }
 }

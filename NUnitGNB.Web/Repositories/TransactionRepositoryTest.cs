@@ -25,8 +25,8 @@ namespace GNB.Web.Tests.Repositories
         [TestCaseSource(typeof(TransactionRepositoryTest), "SomeTestsCases")]
         public async Task TryGetAllTransactionsTest(IEnumerable<TransactionModel> expectedResult)
         {
-            transactionService.Setup(opt => opt.GetAllTransactions()).ReturnsAsync(expectedResult);
-            IEnumerable<TransactionModel> result = await transactionRepositoryTest.TryGetAllTransactions();
+            transactionService.Setup(opt => opt.GetAllTransactions(new TransactionModel())).ReturnsAsync(expectedResult);
+            IEnumerable<TransactionModel> result = await transactionRepositoryTest.TryGetAllTransactions(new TransactionModel());
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 

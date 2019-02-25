@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GNB.Web.Models;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -14,11 +16,11 @@ namespace GNB.Web.Clients
             HttpClient = httpClient;
         }
 
-        public async Task<string> GetStringTransactions()
+        public async Task<string> GetStringRates()
         {
             try
             {
-                var data = await HttpClient.GetStringAsync("transaction");
+                string data = await HttpClient.GetStringAsync("rate");
                 return data;
             }
             catch (Exception e)
@@ -27,12 +29,26 @@ namespace GNB.Web.Clients
             }
         }
 
-        public async Task<string> GetStringRates()
+        public async Task<string> GetStringTransactions(TransactionModel model = null)
         {
             try
             {
-                var data = await HttpClient.GetStringAsync("rate");
-                return data;
+                HttpResponseMessage response;
+
+                if (model == null)
+                    response = await HttpClient.PostAsJsonAsync("transaction", new TransactionModel());
+                else
+                    response = await HttpClient.PostAsJsonAsync("transaction", model);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpRequestException("The call was not successful");
+                }
+
             }
             catch (Exception e)
             {

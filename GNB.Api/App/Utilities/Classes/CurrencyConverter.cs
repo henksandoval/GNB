@@ -80,7 +80,7 @@ namespace GNB.Api.App.Utilities
 
             if (rates.Any(x => x.From == currentCurrency && x.To == transaction.CurrencyConverted))
             {
-                RateModel rate = rates.Single(x => x.From == currentCurrency && x.To == transaction.CurrencyConverted);
+                RateModel rate = rates.FirstOrDefault(x => x.From == currentCurrency && x.To == transaction.CurrencyConverted);
                 currentAmount = ConvertAmountFromTo(currentAmount, rate);
                 currentCurrency = rate.To;
                 return true;
@@ -108,14 +108,14 @@ namespace GNB.Api.App.Utilities
             {
                 if (rates.Except(ratesUsed).Any(x => x.From == currentCurrency))
                 {
-                    RateModel rate = rates.First(x => x.From == currentCurrency);
+                    RateModel rate = rates.FirstOrDefault(x => x.From == currentCurrency);
                     currentAmount = ConvertAmountFromTo(currentAmount, rate);
                     currentCurrency = rate.To;
                     ratesUsed.Add(rate);
                 }
                 else if (rates.Except(ratesUsed).Any(x => x.To == currentCurrency))
                 {
-                    RateModel rate = rates.First(x => x.To == currentCurrency);
+                    RateModel rate = rates.FirstOrDefault(x => x.To == currentCurrency);
                     currentAmount = ConvertAmountToFrom(currentAmount, rate);
                     currentCurrency = rate.From;
                     ratesUsed.Add(rate);
@@ -129,8 +129,12 @@ namespace GNB.Api.App.Utilities
 
         private async Task<IEnumerable<RateModel>> GetRates()
         {
-            IEnumerable<RateModel> rates = await service.TryGetRates();
-            return duplicateRatesCleaner.DeletingDuplicates(rates);
+            if (rates == null)
+            {
+                rates = duplicateRatesCleaner.DeletingDuplicates(await service.TryGetRates());
+            }
+
+            return rates;
         }
 
         private decimal ConvertAmountFromTo(decimal amount, RateModel rate) => ApplyBankRounding(amount * rate.Rate);

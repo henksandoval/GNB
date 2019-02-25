@@ -33,9 +33,9 @@ namespace GNB.Api
             services.AddSingleton<ITransactionBusiness, TransactionBusiness>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
 
-            //services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
+            services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
 
-            services.AddSingleton<IHerokuAppClient, HerokuAppClientFromJsonFile>();
+            //services.AddSingleton<IHerokuAppClient, HerokuAppClientFromJsonFile>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

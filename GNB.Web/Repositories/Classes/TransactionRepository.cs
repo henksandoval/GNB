@@ -16,12 +16,9 @@ namespace GNB.Web.Repositories
             this.transactionService = transactionService;
         }
 
-        public async Task<IEnumerable<TransactionModel>> TryGetAllTransactions(Func<TransactionModel, bool> predicate = null)
+        public async Task<IEnumerable<TransactionModel>> TryGetAllTransactions(TransactionModel model = null)
         {
-            return await transactionService.GetAllTransactions();
-            //return (await transactionService.GetAllTransactions()).Where(predicate);
-            //IEnumerable<TransactionModel> data = (await transactionService.GetAllTransactions()).Where(predicate);
-            //return data.Where(predicate);
+            return await transactionService.GetAllTransactions(model);
         }
     }
 }
