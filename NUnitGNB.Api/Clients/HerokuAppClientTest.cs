@@ -1,4 +1,4 @@
-﻿using GNB.Api.Clients;
+﻿using GNB.Api.App.Clients;
 using NUnit.Framework;
 using System;
 using System.Net.Http;
@@ -32,18 +32,6 @@ namespace GNB.Api.Tests.Clients
         {
             string transactions = await herokuAppClient.GetStringTransactions();
             Assert.IsNotNull(transactions);
-        }
-
-
-        //[TestCase(Category = "UnitTest")]
-        public void ThrowOnBadRequest()
-        {
-            HerokuAppClient request = new HerokuAppClient(new HttpClient
-            {
-                BaseAddress = new Uri("http://quiet-stone-2094.herokuapp.com/badRequest")
-            });
-
-            Exception exception = Assert.ThrowsAsync<Exception>(async () => await request.GetStringTransactions());
         }
     }
 }

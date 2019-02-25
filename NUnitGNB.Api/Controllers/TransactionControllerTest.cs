@@ -1,4 +1,5 @@
-﻿using GNB.Api.Controllers;
+﻿using GNB.Api.Business;
+using GNB.Api.Controllers;
 using GNB.Api.Models;
 using GNB.Api.Services;
 using Moq;
@@ -35,8 +36,8 @@ namespace GNB.Api.Tests.Controllers
         [TestCaseSource("TransactionSource", Category = "UnitTest")]
         public async Task GetAllTransactions(IEnumerable<TransactionModel> Transactions)
         {
-            Mock<ITransactionService<TransactionModel>> mock = new Mock<ITransactionService<TransactionModel>>();
-            mock.Setup(opt => opt.TryGetTransactions()).ReturnsAsync(Transactions);
+            Mock<ITransactionBusiness> mock = new Mock<ITransactionBusiness>();
+            mock.Setup(opt => opt.GetAllTransactions()).ReturnsAsync(Transactions);
             TransactionController controller = new TransactionController(mock.Object);
             IEnumerable<TransactionModel> response = await controller.GetAllTransactions();
             Assert.That(response.Count(), Is.EqualTo(Transactions.Count()));

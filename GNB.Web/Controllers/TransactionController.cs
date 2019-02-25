@@ -1,5 +1,6 @@
 ﻿using GNB.Web.Models;
 using GNB.Web.Repositories;
+using GNB.Web.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,10 +17,25 @@ namespace GNB.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index() => View("Index");
+
+        [HttpGet]
+        public IActionResult TransactionsNewCurrency() => View("Converter");
+
+        [HttpPost]
+        public async Task<IActionResult> GetTransactions(DataTableUtility dataTable)
         {
+            string searchSku = dataTable.GetParameterInCustomSearchByName("sku");
+            string searchCurrency = dataTable.GetParameterInCustomSearchByName("currency");
+
             IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions();
-            return View("Index", transactions);
+            IEnumerable<TransactionModel> returnData = transactions
+                .WhereIf(!searchSku.IsNullOrEmpty(), x => x.Sku.ToLower() == searchSku.ToLower())
+                .WhereIf(!searchCurrency.IsNullOrEmpty(), x => x.Currency.ToLower() == searchCurrency.ToLower());
+
+            return Ok(dataTable.GetPropertiesDataTable(returnData));
         }
+
+
     }
 }

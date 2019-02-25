@@ -2,6 +2,7 @@
 using GNB.Web.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GNB.Web.Repositories
@@ -17,7 +18,10 @@ namespace GNB.Web.Repositories
 
         public async Task<IEnumerable<TransactionModel>> TryGetAllTransactions(Func<TransactionModel, bool> predicate = null)
         {
-            return await transactionService.GetAllTransactions(predicate);
+            return await transactionService.GetAllTransactions();
+            //return (await transactionService.GetAllTransactions()).Where(predicate);
+            //IEnumerable<TransactionModel> data = (await transactionService.GetAllTransactions()).Where(predicate);
+            //return data.Where(predicate);
         }
     }
 }

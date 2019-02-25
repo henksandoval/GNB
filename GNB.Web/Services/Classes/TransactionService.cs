@@ -16,7 +16,7 @@ namespace GNB.Web.Services
             this.apiClient = apiClient;
         }
 
-        public async Task<IEnumerable<TransactionModel>> GetAllTransactions(Func<TransactionModel, bool> predicate = null)
+        public async Task<IEnumerable<TransactionModel>> GetAllTransactions()
         {
             string data = await apiClient.GetStringTransactions();
             return JsonConvert.DeserializeObject<IEnumerable<TransactionModel>>(data);

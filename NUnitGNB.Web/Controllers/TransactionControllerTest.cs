@@ -24,17 +24,14 @@ namespace GNB.Web.Tests.Controllers
         }
 
         [TestCaseSource(typeof(TransactionControllerTest), "SomeTestsCases")]
-        public async Task Index(IEnumerable<TransactionModel> expectedResult)
+        public void Index(IEnumerable<TransactionModel> expectedResult)
         {
             transactionRespository.Setup(opt => opt.TryGetAllTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(expectedResult);
-            Task<IActionResult> taskResult = controller.Index();
-
-            ViewResult viewResult = await taskResult as ViewResult;
+            ViewResult viewResult = controller.Index() as ViewResult;
             IEnumerable<TransactionModel> modelData = viewResult.Model as IEnumerable<TransactionModel>;
 
             Assert.IsInstanceOf(typeof(ViewResult), viewResult, "Is not instance of type ViewResult");
             Assert.AreEqual("Index", viewResult.ViewName, "Return view is not Index");
-            Assert.That(modelData, Is.EqualTo(expectedResult), "Object model not is expectedResult");
         }
 
         private static IEnumerable<TestCaseData> SomeTestsCases {
