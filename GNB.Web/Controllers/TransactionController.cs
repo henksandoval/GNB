@@ -20,6 +20,9 @@ namespace GNB.Web.Controllers
         [HttpGet]
         public IActionResult Index() => View("Index");
 
+        [HttpGet]
+        public IActionResult TransactionsNewCurrency() => View("Converter");
+
         [HttpPost]
         public async Task<IActionResult> GetTransactions(DataTableUtility dataTable)
         {
@@ -34,5 +37,7 @@ namespace GNB.Web.Controllers
 
             return Ok(dataTable.GetPropertiesDataTable(transactions));
         }
+
+
     }
 }

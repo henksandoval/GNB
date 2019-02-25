@@ -28,6 +28,8 @@ namespace GNB.Web
             services.AddHttpClient<IApiClient, ApiClient>(c => c.BaseAddress = new Uri(uriApiClient.Value));
             services.AddSingleton<ITransactionService, TransactionService>();
             services.AddSingleton<ITransactionRepository, TransactionRepository>();
+            services.AddSingleton<IRateRepository, RateRepository>();
+            services.AddSingleton<IRateService, RateService>();
 
             services.Configure<CookiePolicyOptions>(options =>
             {
