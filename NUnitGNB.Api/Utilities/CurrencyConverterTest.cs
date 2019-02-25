@@ -16,15 +16,26 @@ namespace GNB.Api.Tests.Utilities
         public async Task Test(TransactionViewModel transaction, IEnumerable<RateModel> rates, decimal expectedValue)
         {
             Mock<IRateService<RateModel>> service = new Mock<IRateService<RateModel>>();
+            Mock<IDuplicateRatesCleaner> duplicateRatesCleaner = new Mock<IDuplicateRatesCleaner>();
             service.Setup(opt => opt.TryGetRates()).ReturnsAsync(rates);
+            duplicateRatesCleaner.Setup(opt => opt.DeletingDuplicates(rates)).Returns(rates);
 
-            ICurrencyConverter converter = new CurrencyConverter(service.Object);
+            ICurrencyConverter converter = new CurrencyConverter(service.Object, duplicateRatesCleaner.Object);
             TransactionViewModel result = await converter.ApplyConversion(transaction);
-            Assert.That(Equals(result.AmountConverted, expectedValue));
+            Assert.That(Equals(result.AmountConverted, expectedValue), $"Value expected {expectedValue}, value result {result.AmountConverted}");
         }
 
         private static IEnumerable<TestCaseData> SomeTestsCases {
             get {
+                yield return new TestCaseData
+                (
+                    new TransactionViewModel { Amount = 10.5m, Currency = "EUR", CurrencyConverted = "EUR" },
+                    new List<RateModel>
+                        {
+                            new RateModel { From = "USD", To = "EUR", Rate = 0.736m },
+                        },
+                    10.5m
+                ).SetName("WithOutConversion");
                 yield return new TestCaseData
                 (
                     new TransactionViewModel { Amount = 10.5m, Currency = "USD", CurrencyConverted = "EUR" },
@@ -32,7 +43,7 @@ namespace GNB.Api.Tests.Utilities
                         {
                             new RateModel { From = "USD", To = "EUR", Rate = 0.736m },
                         },
-                    7.728m
+                    7.73m
                 ).SetName("ConversionSimpleFromTo");
                 yield return new TestCaseData
                 (
@@ -41,7 +52,7 @@ namespace GNB.Api.Tests.Utilities
                         {
                             new RateModel { From = "EUR", To = "USD", Rate = 1.358m },
                         },
-                    7.73195876m
+                    7.73m
                 ).SetName("ConversionSimpleToFrom");
                 yield return new TestCaseData
                 (
@@ -49,26 +60,21 @@ namespace GNB.Api.Tests.Utilities
                     new List<RateModel>
                         {
                             new RateModel { From = "AUD", To = "CAD", Rate = 0.56m },
-                            new RateModel { From = "CAD", To = "AUD", Rate = 1.79m },
                             new RateModel { From = "AUD", To = "USD", Rate = 0.92m },
-                            new RateModel { From = "USD", To = "AUD", Rate = 1.09m },
                             new RateModel { From = "CAD", To = "EUR", Rate = 0.65m },
-                            new RateModel { From = "EUR", To = "CAD", Rate = 1.54m },
                         },
-                    11.30766m
+                    11.28m
                 ).SetName("ConversionCascadeFrom");
                 yield return new TestCaseData
                 (
-                    new TransactionViewModel { Amount = 28.5m, Currency = "USD", CurrencyConverted = "EUR" },
+                    new TransactionViewModel { Amount = 40.6m, Currency = "USD", CurrencyConverted = "EUR" },
                     new List<RateModel>
                         {
                             new RateModel { From = "CAD", To = "AUD", Rate = 1.79m },
                             new RateModel { From = "AUD", To = "USD", Rate = 0.92m },
-                            new RateModel { From = "USD", To = "AUD", Rate = 1.09m },
                             new RateModel { From = "CAD", To = "EUR", Rate = 0.65m },
-                            new RateModel { From = "EUR", To = "CAD", Rate = 1.54m },
                         },
-                    11.30766m
+                    16.02m
                 ).SetName("ConversionCascadeTo");
             }
         }

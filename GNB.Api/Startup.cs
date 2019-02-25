@@ -28,6 +28,7 @@ namespace GNB.Api
 
             services.AddSingleton<IRateService<RateModel>, RateService<RateModel>>();
             services.AddSingleton<ICurrencyConverter, CurrencyConverter>();
+            services.AddSingleton<IDuplicateRatesCleaner, DuplicateRatesCleaner>();
 
             services.AddSingleton<ITransactionBusiness, TransactionBusiness>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
