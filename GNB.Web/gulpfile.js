@@ -25,6 +25,10 @@ const dependencies = {
         'dist/*': 'js',
         'css/*': 'css'
     },
+    'datatables.net-bs4': {
+        'css/*': 'css',
+        'js/*': 'js'
+    },
 };
 
 const pathLibrary = 'wwwroot/lib/thirdPartyLibrary/';

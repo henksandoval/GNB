@@ -18,6 +18,7 @@
   "homepage": "https://gitlab.com/hsandoval/gnb#readme",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "datatables.net-bs4": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "jquery": "^3.3.1",
     "jquery-validate": "^2.0.0",

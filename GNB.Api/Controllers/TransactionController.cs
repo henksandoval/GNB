@@ -1,5 +1,5 @@
-﻿using GNB.Api.Models;
-using GNB.Api.Services;
+﻿using GNB.Api.App.Business;
+using GNB.Api.App.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,15 +10,15 @@ namespace GNB.Api.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransactionService<TransactionModel> TransactionService;
+        private readonly ITransactionBusiness TransactionBusiness;
 
-        public TransactionController(ITransactionService<TransactionModel> transactionService)
+        public TransactionController(ITransactionBusiness transactionService)
         {
-            TransactionService = transactionService;
+            TransactionBusiness = transactionService;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TransactionModel>> GetAllTransactions() =>
-            await TransactionService.TryGetTransactions();
+        public async Task<IEnumerable<TransactionViewModel>> GetAllTransactions() =>
+            await TransactionBusiness.GetAllTransactions();
     }
 }

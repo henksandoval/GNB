@@ -25,7 +25,7 @@ namespace GNB.Web.Tests.Repositories
         [TestCaseSource(typeof(TransactionRepositoryTest), "SomeTestsCases")]
         public async Task TryGetAllTransactionsTest(IEnumerable<TransactionModel> expectedResult)
         {
-            transactionService.Setup(opt => opt.GetAllTransactions(It.IsAny<Func<TransactionModel, bool>>())).ReturnsAsync(expectedResult);
+            transactionService.Setup(opt => opt.GetAllTransactions()).ReturnsAsync(expectedResult);
             IEnumerable<TransactionModel> result = await transactionRepositoryTest.TryGetAllTransactions();
             Assert.That(result, Is.EqualTo(expectedResult));
         }
@@ -43,7 +43,7 @@ namespace GNB.Web.Tests.Repositories
                         new TransactionModel { Amount = 53.4m, Currency = "USD", Sku = "TD2306" }
                     }
                 )
-                .SetName("TestViewIndex");
+                .SetName("TestGetAllTransactions");
             }
         }
     }

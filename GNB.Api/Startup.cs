@@ -1,6 +1,8 @@
-﻿using GNB.Api.Clients;
-using GNB.Api.Models;
-using GNB.Api.Services;
+﻿using GNB.Api.App.Business;
+using GNB.Api.App.Clients;
+using GNB.Api.App.Models;
+using GNB.Api.App.Services;
+using GNB.Api.App.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +27,15 @@ namespace GNB.Api
             IConfigurationSection uriHerokuApp = Configuration.GetSection("UriHerokuApp");
 
             services.AddSingleton<IRateService<RateModel>, RateService<RateModel>>();
+            services.AddSingleton<ICurrencyConverter, CurrencyConverter>();
+            services.AddSingleton<IDuplicateRatesCleaner, DuplicateRatesCleaner>();
+
+            services.AddSingleton<ITransactionBusiness, TransactionBusiness>();
             services.AddSingleton<ITransactionService<TransactionModel>, TransactionService<TransactionModel>>();
 
-            services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
+            //services.AddHttpClient<IHerokuAppClient, HerokuAppClient>(c => c.BaseAddress = new Uri(uriHerokuApp.Value));
+
+            services.AddSingleton<IHerokuAppClient, HerokuAppClientFromJsonFile>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

@@ -26,5 +26,18 @@ namespace GNB.Web.Clients
                 throw new Exception(e.InnerException?.Message, e.InnerException);
             }
         }
+
+        public async Task<string> GetStringRates()
+        {
+            try
+            {
+                var data = await HttpClient.GetStringAsync("rate");
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.InnerException?.Message, e.InnerException);
+            }
+        }
     }
 }

@@ -1,5 +1,5 @@
-﻿using GNB.Api.Models;
-using GNB.Api.Services;
+﻿using GNB.Api.App.Models;
+using GNB.Api.App.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

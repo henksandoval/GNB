@@ -4,7 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<link href="~/lib/datatables/media/css/dataTables.bootstrap4.css" rel="stylesheet" />
+<environment include="Development">
+    <link href="~/lib/thirdPartyLibrary/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet" />
+</environment>
+
+<environment exclude="Development">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"
+          asp-fallback-href="~/lib/thirdPartyLibrary/datatables.net-bs4/css/dataTables.bootstrap4.css"
+          asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+</environment>
 
 <div class="container-fluid">
     <div class="row page-titles">
@@ -40,18 +48,7 @@
                         <div class="card-body">
                             <div class="table-responsive m-t-40">
                                 <div class="col-12">
-                                    <table id="tableTransactions" class="table table-bordered table-striped" style="width: 100%">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">Correo</th>
-                                                <th class="text-center">Usuario</th>
-                                                <th class="text-center">Nombre</th>
-                                                <th class="text-center">Numero documento</th>
-                                                <th class="text-center">Estatus</th>
-                                                <th class="text-center">Acciones</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
+                                    <table id="tableTransactions" class="table table-bordered table-striped" style="width: 100%"></table>
                                 </div>
                             </div>
                         </div>
@@ -62,6 +59,21 @@
     </div>
 </div>
 
-<script src="~/lib/datatables/datatables.min.js"></script>
-<script src="~/js/CustomDataTable.js"></script>
-<script src="~/js/App/TransactionIndex.js"></script>
+<environment include="Development">
+    <script src="~/lib/thirdPartyLibrary/datatables.net/jquery.dataTables.js"></script>
+    <script src="~/lib/thirdPartyLibrary/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
+</environment>
+
+<environment exclude="Development">
+    <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"
+            asp-fallback-src="~/lib/thirdPartyLibrary/datatables.net/jquery.dataTables.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.validator">
+    </script>
+    <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"
+            asp-fallback-src="~/lib/thirdPartyLibrary/datatables.net-bs4/js/dataTables.bootstrap4.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.validator">
+    </script>
+</environment>
+
+<script src="~/js/Utilities/CustomDataTable.js"></script>
+<script src="~/js/App/Transaction-Index.js"></script>
