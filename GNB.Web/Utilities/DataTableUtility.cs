@@ -29,8 +29,7 @@ namespace GNB.Web.Utilities
             data = GetDataFiltered(source.ToList())
         };
 
-        internal string GetParameterInCustomSearchByName(string nameParameter) =>
-            CustomSearches?.SingleOrDefault(x => x.Name.ToLower() == nameParameter.ToLower()).Value.ToString() ?? string.Empty;
+        internal string GetParameterInCustomSearchByName(string nameParameter) => CustomSearches?.FirstOrDefault(x => x.Name.ToLower() == nameParameter.ToLower())?.Value?.ToString() ?? string.Empty;
 
         private IEnumerable<object> GetDataFiltered(IList<object> source) => source.Skip(Start).Take(Length);
     }

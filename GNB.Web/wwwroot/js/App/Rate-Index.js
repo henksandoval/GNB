@@ -15,7 +15,7 @@ let loadDatatable = async () => {
 };
 
 let condicionesFiltrado = (infFilter, infDataTable) => {
-    let parametrosTabla = parametrosBusqueda();
+    let parametrosTabla = getSearchParameters();
 
     return $.extend({}, infFilter, {
         "CustomSearches": [
@@ -38,7 +38,7 @@ let columnsDataTable = async () => {
             className: 'dt-body-center'
         },
     ];
-}
+};
 
 //$('#btnClear').click(function () {
 //    $('.input-filter').val("");

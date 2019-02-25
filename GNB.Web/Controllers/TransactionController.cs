@@ -3,7 +3,6 @@ using GNB.Web.Repositories;
 using GNB.Web.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace GNB.Web.Controllers
@@ -30,12 +29,11 @@ namespace GNB.Web.Controllers
             string searchCurrency = dataTable.GetParameterInCustomSearchByName("currency");
 
             IEnumerable<TransactionModel> transactions = await transactionRepository.TryGetAllTransactions();
-
-            transactions
+            IEnumerable<TransactionModel> returnData = transactions
                 .WhereIf(!searchSku.IsNullOrEmpty(), x => x.Sku.ToLower() == searchSku.ToLower())
                 .WhereIf(!searchCurrency.IsNullOrEmpty(), x => x.Currency.ToLower() == searchCurrency.ToLower());
 
-            return Ok(dataTable.GetPropertiesDataTable(transactions));
+            return Ok(dataTable.GetPropertiesDataTable(returnData));
         }
 
 
